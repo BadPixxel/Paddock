@@ -1,3 +1,3 @@
 # Paddock
 
-Welcome to Servers Paddock!  
+Welcome to Servers Paddock!

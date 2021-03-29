@@ -1,0 +1,18 @@
+
+tracks:
+
+    php-config:
+        collector:      "php-ext"
+        description:    "Verify Presence of Php Extensions"
+        options:        { param1: "value", param2: "value" }
+        rules:
+            soap:       { empty: true }
+            xml:        { empty: true }
+
+    php-extensions:
+        collector:      "php-ext"
+        enabled:        false
+        description:    "Verify Presence of Php Extensions"
+        options:        { param1: "value", param2: "value" }
+        rules:
+            soap:       { empty: false }

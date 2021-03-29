@@ -1,19 +1,23 @@
 {
+    "name": "splash/splash-server",
+    "description": "Splash Sync Main Server - Symfony Project",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.2.5",
-        "ext-ctype": "*",
-        "ext-iconv": "*",
-        "symfony/console": "5.2.*",
-        "symfony/dotenv": "5.2.*",
-        "symfony/flex": "^1.3.1",
-        "symfony/framework-bundle": "5.2.*",
-        "symfony/yaml": "5.2.*"
+        "php":                                          ">=7.2.5",
+        "ext-ctype":                                    "*",
+        "ext-iconv":                                    "*",
+        "symfony/console":                              "5.2.*",
+        "symfony/monolog-bridge":                       "5.2.*",
+        "symfony/dotenv":                               "5.2.*",
+        "symfony/flex":                                 "^1.3.1",
+        "symfony/framework-bundle":                     "5.2.*",
+        "symfony/yaml":                                 "5.2.*"
     },
     "require-dev": {
+        "badpixxel/php-sdk":                            "dev-main"
     },
     "config": {
         "optimize-autoloader": true,
@@ -24,12 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "BadPixxel\\Paddock\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "BadPixxel\\Paddock\\Tests\\": "tests/"
         }
     },
     "replace": {

@@ -1,0 +1,57 @@
+
+services:
+
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    ########################################################################
+    #   PADDOCK CORE SERVICES
+    ########################################################################
+
+    BadPixxel\Paddock\Core\Services\LogManager: ~
+
+    BadPixxel\Paddock\Core\Services\RulesManager:
+        public: true
+
+    BadPixxel\Paddock\Core\Services\CollectorsManager:
+        public: true
+        arguments:
+            - !tagged_iterator { tag: 'paddock.collector', default_index_method: 'getCode' }
+
+    BadPixxel\Paddock\Core\Services\TracksManager:
+        public: true
+
+    BadPixxel\Paddock\Core\Services\Analyzer:
+        public: true
+#        arguments:
+#            - '%sf_server_checker%'
+    
+    ########################################################################
+    #   SERVER COMMANDS
+    ########################################################################
+    
+#    badpixxel.server.command.check:
+#        class: BadPixxel\SfServerChecker\Command\CheckCommand
+#        tags:    [ console.command ]
+#
+#    badpixxel.server.command.reboot:
+#        class: BadPixxel\SfServerChecker\Command\RebootCommand
+#        tags:    [ console.command ]
+
+    ########################################################################
+    #   PADDOCK EVENTS SUBSCRIBER
+    ########################################################################
+
+    BadPixxel\Paddock\Core\EventSubscriber\:
+        resource: '../../EventSubscriber/'
+        tags:    [ kernel.event_subscriber ]
+
+  ########################################################################
+  #   PADDOCK CLI COMMANDS
+  ########################################################################
+
+    BadPixxel\Paddock\Core\Command\:
+        resource: '../../Command/'
+        tags:    [ console.command ]

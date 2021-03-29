@@ -11,6 +11,13 @@
  *  file that was distributed with this source code.
  */
 
-if (file_exists(dirname(__DIR__).'/var/cache/prod/App_KernelProdContainer.preload.php')) {
-    require dirname(__DIR__).'/var/cache/prod/App_KernelProdContainer.preload.php';
+namespace BadPixxel\Paddock\System\Php;
+
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+/**
+ * Paddock Bundle for Php Configuration Verifications.
+ */
+class PaddockPhpBundle extends Bundle
+{
 }
