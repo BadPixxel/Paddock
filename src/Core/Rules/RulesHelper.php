@@ -57,7 +57,7 @@ class RulesHelper
         // Ensure Option Exists
         if (!array_key_exists($name, $options)) {
             throw new Exception(sprintf(
-                "Contraint Option %s not found... You should add it at resolving stage.",
+                "Rule Option %s not found... You should add it at resolving stage.",
                 $name
             ));
         }
@@ -76,7 +76,7 @@ class RulesHelper
         $criteria = array();
         foreach ($options[$name] as $level => $value) {
             try {
-                $monologLevel = Logger::toMonologLevel("error");
+                $monologLevel = Logger::toMonologLevel($level);
             } catch (Exception $exception) {
                 continue;
             }

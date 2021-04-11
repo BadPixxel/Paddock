@@ -14,14 +14,13 @@
 namespace BadPixxel\Paddock\Core\Rules;
 
 use BadPixxel\Paddock\Core\Models\Rules\AbstractRule;
+use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * THE Basic Scalar Value Validator
- *
- * Check Value of a bool|string|int|float
+ * THE Basic Version Validator
  */
-class Value extends AbstractRule
+class Version extends AbstractRule
 {
     //====================================================================//
     // DEFINITION
@@ -32,7 +31,7 @@ class Value extends AbstractRule
      */
     public static function getCode(): string
     {
-        return "value";
+        return "version";
     }
 
     /**
@@ -40,7 +39,7 @@ class Value extends AbstractRule
      */
     public static function getDescription(): string
     {
-        return "Basic check of a scalar value";
+        return "Basic check of a Software Version";
     }
 
     //====================================================================//
@@ -54,14 +53,11 @@ class Value extends AbstractRule
     {
         parent::configureOptions($resolver);
 
-        RulesHelper::addScalarOption($resolver, "empty");   // Value is empty
-        RulesHelper::addScalarOption($resolver, "ne");      // Value is not empty
-        RulesHelper::addScalarOption($resolver, "eq");      // Value is equal
-        RulesHelper::addScalarOption($resolver, "same");    // Value is same
-        RulesHelper::addScalarOption($resolver, "gt");      // Value is greater
-        RulesHelper::addScalarOption($resolver, "gte");     // Value is greater or equal
-        RulesHelper::addScalarOption($resolver, "lt");      // Value is lower
-        RulesHelper::addScalarOption($resolver, "lte");     // Value is lower or equal
+        RulesHelper::addScalarOption($resolver, "eq");      // Version is equal
+        RulesHelper::addScalarOption($resolver, "gt");      // Version is greater
+        RulesHelper::addScalarOption($resolver, "gte");     // Version is greater or equal
+        RulesHelper::addScalarOption($resolver, "lt");      // Version is lower
+        RulesHelper::addScalarOption($resolver, "lte");     // Version is lower or equal
     }
 
     /**
@@ -74,47 +70,70 @@ class Value extends AbstractRule
         if (!$this->forward(isScalar::getCode(), $value)) {
             return false;
         }
-        //====================================================================//
-        // Empty Value Required
-        if (!$this->forward(isEmpty::getCode(), $value)) {
-            return false;
-        }
-        //====================================================================//
-        // Not Empty Value Required
-        if (!$this->forward(isNotEmpty::getCode(), $value)) {
-            return false;
-        }
+        $value = (string) $value;
         //====================================================================//
         // Equal Value Required
-        if (!$this->forward(isEqual::getCode(), $value)) {
-            return false;
-        }
-        //====================================================================//
-        // Same Value Required
-        if (!$this->forward(isSame::getCode(), $value)) {
+        if (!$this->versionCompare($value, "eq", "==", "equal")) {
             return false;
         }
         //====================================================================//
         // Greater Value Required
-        if (!$this->forward(isGreater::getCode(), $value)) {
+        if (!$this->versionCompare($value, "gt", ">", "greater")) {
             return false;
         }
         //====================================================================//
         // Greater or Equal Value Required
-        if (!$this->forward(isGreaterOrEqual::getCode(), $value)) {
+        if (!$this->versionCompare($value, "gte", ">=", "greater or equal")) {
             return false;
         }
         //====================================================================//
         // Lower Value Required
-        if (!$this->forward(isLower::getCode(), $value)) {
+        if (!$this->versionCompare($value, "lt", "<", "lower")) {
             return false;
         }
         //====================================================================//
         // Lower or Equal Value Required
-        if (!$this->forward(isLowerOrEqual::getCode(), $value)) {
+        if (!$this->versionCompare($value, "lte", "<=", "lower or equal")) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Compare Software Versions
+     *
+     * @param string $value
+     * @param string $name
+     * @param string $operator
+     * @param string $operatorName
+     *
+     * @throws Exception
+     *
+     * @return bool
+     */
+    private function versionCompare(string $value, string $name, string $operator, string $operatorName): bool
+    {
+        $result = 1;
+        foreach (RulesHelper::getLevelCriteria($this->options, $name) as $level => $constraint) {
+            if (version_compare($value, (string) $constraint, $operator)) {
+                $this->info(
+                    sprintf("Version is %s to %s", $operatorName, print_r($constraint, true)),
+                    array($value)
+                );
+
+                continue;
+            }
+            $result &= $this->log(
+                $level,
+                sprintf("Version is not %s to %s", $operatorName, print_r($constraint, true)),
+                array($value)
+            );
+            if (!$result) {
+                return false;
+            }
+        }
+
+        return (bool) $result;
     }
 }

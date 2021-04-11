@@ -17,7 +17,10 @@ use BadPixxel\Paddock\Core\Services\LogManager;
 use BadPixxel\Paddock\System\Php\Models\AbstractPhpCollector;
 use Exception;
 
-class ExtensionsCollector extends AbstractPhpCollector
+/**
+ * PHP Constant Collector
+ */
+class ConstantCollector extends AbstractPhpCollector
 {
     //====================================================================//
     // DEFINITION
@@ -30,7 +33,7 @@ class ExtensionsCollector extends AbstractPhpCollector
      */
     public static function getCode(): string
     {
-        return "php-ext";
+        return "php-constant";
     }
 
     /**
@@ -38,7 +41,7 @@ class ExtensionsCollector extends AbstractPhpCollector
      */
     public static function getDescription(): string
     {
-        return "Collect list of installed extensions";
+        return "Collect PHP Constant";
     }
 
     //====================================================================//
@@ -52,15 +55,16 @@ class ExtensionsCollector extends AbstractPhpCollector
     {
         //====================================================================//
         // Override Rule Name for Logs
-        LogManager::getInstance()->setContextRule("PHP EXT");
+        LogManager::getInstance()->setContextRule("PHP CONST");
         //====================================================================//
-        // Get Extension Version from Current Php Session
-        $value = phpversion($key);
-        if (false === $value) {
-            $this->error(sprintf("Extension %s not found!", $key));
+        // Get Ini Value from Current Php Session
+        if (!defined($key)) {
+            $this->error(sprintf("Constant %s doesn't exists!", $key));
+
+            return "";
         }
 
-        return (string) $value;
+        return constant($key);
     }
 
     //====================================================================//
@@ -74,12 +78,12 @@ class ExtensionsCollector extends AbstractPhpCollector
     {
         //====================================================================//
         // Override Rule Name for Logs
-        LogManager::getInstance()->setContextRule(ucfirst(basename($binary))." EXT");
+        LogManager::getInstance()->setContextRule(ucfirst(basename($binary))." CONST");
         //====================================================================//
-        // Get Ini Value from Shell
-        $value = shell_exec($binary.' -r "echo phpversion(\''.$key.'\');"');
+        // Get PHP Constant from Shell
+        $value = shell_exec($binary.' -r "echo constant(\''.$key.'\');"');
         if (null === $value) {
-            $this->error(sprintf("Extension %s not found!", $key));
+            $this->error(sprintf("Constant %s doesn't exists!", $key));
         }
 
         return (string) $value;

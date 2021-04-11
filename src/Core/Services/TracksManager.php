@@ -13,13 +13,18 @@
 
 namespace BadPixxel\Paddock\Core\Services;
 
+use BadPixxel\Paddock\Core\Loader\YamlLoader;
 use BadPixxel\Paddock\Core\Models\Tracks\AbstractTrack;
 use BadPixxel\Paddock\Core\Tracks\Track;
 use Exception;
-use Symfony\Component\Yaml\Yaml;
 
 class TracksManager
 {
+    /**
+     * @var TracksManager
+     */
+    private static $instance;
+
     /** @var LogManager */
     private $logManager;
 
@@ -36,6 +41,9 @@ class TracksManager
     public function __construct(LogManager $logManager)
     {
         $this->logManager = $logManager;
+        //====================================================================//
+        // Setup Static Access
+        static::$instance = $this;
     }
 
     /**
@@ -71,6 +79,14 @@ class TracksManager
     }
 
     /**
+     * Get Static Instance
+     */
+    public static function getInstance(): TracksManager
+    {
+        return static::$instance;
+    }
+
+    /**
      * Initialize List of Available Tracks
      *
      * @throws Exception
@@ -89,7 +105,7 @@ class TracksManager
 
         //====================================================================//
         // Load Configuration Yaml File
-        $config = Yaml::parseFile(getcwd().'/paddock.yml');
+        $config = YamlLoader::parseFileWithImports(getcwd().'/paddock.yml');
         //====================================================================//
         // Safety Check - Tracks are Defined
         if (!is_array($config) || !isset($config["tracks"])) {
@@ -107,6 +123,11 @@ class TracksManager
                 continue;
             }
             $this->tracks[$code] = Track::fromArray($code, $track);
+        }
+        //====================================================================//
+        // Complete Tracks with Children Rules
+        foreach ($this->tracks as $track) {
+            $track->importChildRules($this->tracks);
         }
 
         return count($this->tracks);

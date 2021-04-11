@@ -13,36 +13,17 @@
 
 namespace BadPixxel\Paddock\Core\Command;
 
-use BadPixxel\Paddock\Core\Services\LogManager;
-use BadPixxel\Paddock\Core\Services\TracksManager;
-use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
+use BadPixxel\Paddock\Core\Models\Command\AbstractCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Run One or All Defined Tracks
  */
-class VerifyCommand extends Command
+class VerifyCommand extends AbstractCommand
 {
-    /** @var TracksManager */
-    private $manager;
-
-    /** @var LogManager */
-    private $logManager;
-
-    /**
-     * @param TracksManager $tracksManager
-     */
-    public function __construct(TracksManager $tracksManager, LogManager $logManager)
-    {
-        parent::__construct();
-
-        $this->manager = $tracksManager;
-        $this->logManager = $logManager;
-    }
-
     /**
      * Configure Command.
      */
@@ -51,6 +32,8 @@ class VerifyCommand extends Command
         $this
             ->setName('paddock:run')
             ->setDescription('Run One or All Defined Tracks')
+            ->addArgument('track', InputArgument::OPTIONAL, 'Track Code to Execute')
+            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Response Format')
         ;
     }
 
@@ -67,25 +50,34 @@ class VerifyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         //====================================================================//
-        // Setup Console Log
-        $this->logManager->pushHandler(new ConsoleHandler($output));
+        // Init Paddock Command
+        $this->init($input, $output);
         //====================================================================//
-        // Load List of Available Tracks
-        $tracks = $this->manager->getAll();
-        //====================================================================//
-        // Show Constraints List
-        $table = new Table($output);
-        $table->setHeaders(array('Code', 'Collector', 'Constraints', 'Description'));
-        foreach ($tracks as $code => $constraint) {
-            $table->addRow(array(
-                $code,
-                $constraint->getCollector(),
-                $constraint->countRules(),
-                $constraint->getDescription()
-            ));
+        // Detect Tracks to Execute
+        $trackCode = $input->getArgument("track");
+        if (!empty($trackCode)) {
+            //====================================================================//
+            // Run ONE Track
+            if (!is_string($trackCode)) {
+                $this->error("Track Code is not a string!");
+                //====================================================================//
+                // Close Paddock Command
+                return $this->close($input, $output);
+            }
+            $this->runner->run($trackCode, 0);
+            //====================================================================//
+            // Close Paddock Command
+            return $this->close($input, $output);
         }
-        $table->render();
-
-        return 0;
+        //====================================================================//
+        // Run All Active Tracks
+        foreach ($this->tracks->getAll() as $trackCode => $track) {
+            if ($track->isEnabled()) {
+                $this->runner->run($trackCode, 0);
+            }
+        }
+        //====================================================================//
+        // Close Paddock Command
+        return $this->close($input, $output);
     }
 }

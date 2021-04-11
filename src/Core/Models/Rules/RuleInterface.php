@@ -13,6 +13,7 @@
 
 namespace BadPixxel\Paddock\Core\Models\Rules;
 
+use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -39,38 +40,55 @@ interface RuleInterface
      *
      * Use this function to details what will be checked with this given config.
      *
-     * @param array $configuration
+     * @param array $options
      *
      * @return string
      */
-    public static function getRuleDescription(array $configuration): string;
+    public static function getRuleDescription(array $options): string;
 
     /**
      * Configure Resolver for Constraints Configuration
      *
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver): void;
+    public static function configureOptions(OptionsResolver $resolver): void;
 
     /**
      * Execute Constraint Validation for Configuration
      *
-     * @param array $options
-     * @param mixed $value
+     * @param array $options Rule Options
+     * @param mixed $value   Value to Validate
+     *
+     * @return bool
      */
-    public function execute(array $options, $value): void;
+    public function execute(array $options, $value): bool;
+
+    /**
+     * Forward Constraint Validation to another rule
+     *
+     * @param string     $ruleCode Rule to Execute
+     * @param mixed      $value    Value to Validate
+     * @param null|array $options  Override Rule Options
+     *
+     * @return bool
+     */
+    public function forward(string $ruleCode, $value, array $options = null): bool;
 
     /**
      * Verify Value
      *
-     * @param mixed $value
+     * @param mixed $value Value to Validate
+     *
+     * @throws Exception
+     *
+     * @return bool
      */
-    public function verify($value): void;
+    public function verify($value): bool;
 
     /**
-     * Validate Options Pass Resolver Résolution
+     * Validate Options Pass Resolver Resolution
      *
-     * @param array $options
+     * @param array $options Rule Options
      *
      * @return bool
      */

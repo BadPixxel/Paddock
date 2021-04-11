@@ -13,7 +13,9 @@
 
 namespace BadPixxel\Paddock\Core\Services;
 
-use Monolog\Handler\AbstractProcessingHandler;
+use BadPixxel\Paddock\Core\Formatter;
+use BadPixxel\Paddock\Core\Models\Formatter\AbstractFormatter;
+use Exception;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
@@ -39,7 +41,7 @@ class LogManager
     private $logger;
 
     /**
-     * @var AbstractProcessingHandler
+     * @var TestHandler
      */
     private $logHandler;
 
@@ -55,7 +57,7 @@ class LogManager
         //====================================================================//
         // Configure Logger
         $this->logger = new Logger('paddock');
-        $this->logHandler = new TestHandler(Logger::NOTICE);
+        $this->logHandler = new TestHandler(Logger::DEBUG);
         $this->logger->pushHandler($this->logHandler);
         //====================================================================//
         // Setup Static Access
@@ -69,8 +71,9 @@ class LogManager
     /**
      * Add a Log Message.
      *
-     * @param int    $level
-     * @param string $message
+     * @param int        $level
+     * @param string     $message
+     * @param null|array $context
      *
      * @return void
      */
@@ -85,6 +88,9 @@ class LogManager
         if (isset($this->context['rule'])) {
             $prefix .= '['.$this->context['rule']."]";
         }
+        if (isset($this->context['key'])) {
+            $prefix .= '['.$this->context['key']."]";
+        }
         $prefix = $prefix ? $prefix.' ' : '';
         //====================================================================//
         // Build Message Context
@@ -96,6 +102,8 @@ class LogManager
 
     /**
      * Pushes a handler on to the stack.
+     *
+     * @param HandlerInterface $handler
      *
      * @return self
      */
@@ -141,11 +149,49 @@ class LogManager
     }
 
     /**
+     * Override Log Context Rule Code
+     * May be used by Collector to detail what we are reading!
+     *
+     * @param string $ruleCode
+     */
+    public function setContextRule(string $ruleCode): void
+    {
+        if (isset($this->context["rule"])) {
+            $this->context["rule"] = $ruleCode;
+        }
+    }
+
+    /**
      * Reset Logger Context
      */
     public function resetContext(): void
     {
         $this->context = array();
+    }
+
+    //====================================================================//
+    // FORMATTERS MANAGEMENT
+    //====================================================================//
+
+    /**
+     * Get Results Logs Formatter
+     *
+     * @param string $formatterCode
+     *
+     * @throws Exception
+     *
+     * @return AbstractFormatter
+     */
+    public function getFormatter(string $formatterCode): AbstractFormatter
+    {
+        $records = $this->getHandler()->getRecords();
+        //====================================================================//
+        // Select Formatter
+        switch ($formatterCode) {
+            case "nrpe":
+            default:
+                return new Formatter\NrpeFormatter($records);
+        }
     }
 
     //====================================================================//
@@ -171,9 +217,65 @@ class LogManager
     /**
      * Get Log Handler
      */
-    public function getHandler(): AbstractProcessingHandler
+    public function getHandler(): TestHandler
     {
         return $this->logHandler;
+    }
+
+    /**
+     * Check if There was Errors.
+     *
+     * @return bool
+     */
+    public function hasErrors(): bool
+    {
+        foreach (Logger::getLevels() as $level) {
+            if ($level >= Logger::ERROR) {
+                if ($this->logHandler->hasRecords($level)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if There was Warnings.
+     *
+     * @return bool
+     */
+    public function hasWarnings(): bool
+    {
+        foreach (Logger::getLevels() as $level) {
+            if (($level < Logger::ERROR) && ($level >= Logger::WARNING)) {
+                if ($this->logHandler->hasRecords($level)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if There was Warnings.
+     *
+     * @param int $minLevel
+     *
+     * @return bool
+     */
+    public function hasRecordsAboveLevel(int $minLevel): bool
+    {
+        foreach (Logger::getLevels() as $level) {
+            if ($level >= $minLevel) {
+                if ($this->logHandler->hasRecords($level)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     //====================================================================//

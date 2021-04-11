@@ -1,18 +1,22 @@
 
+imports:
+    - src/System/Php/Resources/tracks/prod/php-config.yml
+
+
 tracks:
 
     php-config:
-        collector:      "php-ext"
-        description:    "Verify Presence of Php Extensions"
-        options:        { param1: "value", param2: "value" }
-        rules:
-            soap:       { empty: true }
-            xml:        { empty: true }
+        description:    "Verify Php Configurations"
+        children:
+            - bp-prod-php-config
+    #            - track: bp-prod-php-config
+    #              options:
+    #                  bin:            "/usr/bin/php7.4"
 
     php-extensions:
-        collector:      "php-ext"
-        enabled:        false
         description:    "Verify Presence of Php Extensions"
-        options:        { param1: "value", param2: "value" }
-        rules:
-            soap:       { empty: false }
+        children:
+            - bp-prod-php-ext
+#            - track: bp-prod-php-ext
+#              options:
+#                  bin:            "/usr/bin/php7.4"

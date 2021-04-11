@@ -35,5 +35,15 @@ class ConstraintsSubscriber implements EventSubscriberInterface
     public function registerConstraints(GetConstraintsEvent $event): void
     {
         $event->add(Rules\Value::class);
+        $event->add(Rules\Version::class);
+        $event->add(Rules\isScalar::class);
+        $event->add(Rules\isEmpty::class);
+        $event->add(Rules\isNotEmpty::class);
+        $event->add(Rules\isEqual::class);
+        $event->add(Rules\isSame::class);
+        $event->add(Rules\isGreater::class);
+        $event->add(Rules\isGreaterOrEqual::class);
+        $event->add(Rules\isLower::class);
+        $event->add(Rules\isLowerOrEqual::class);
     }
 }

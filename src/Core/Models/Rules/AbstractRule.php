@@ -32,7 +32,7 @@ abstract class AbstractRule implements RuleInterface
      *
      * @var array
      */
-    const CORE_OPTIONS = array("enabled", "description", "collector", "options", "key");
+    const CORE_OPTIONS = array("rule", "enabled", "description", "collector", "options", "key");
 
     /**
      * @var array
@@ -70,7 +70,7 @@ abstract class AbstractRule implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public static function getRuleDescription(array $configuration): string
+    public static function getRuleDescription(array $options): string
     {
         return sprintf(
             "Rule %s provides no constraint description...",
@@ -85,80 +85,12 @@ abstract class AbstractRule implements RuleInterface
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-    }
-
-    //====================================================================//
-    // EXECUTION
-    //====================================================================//
-
-    /**
-     * {@inheritDoc}
-     */
-    final public function execute(array $options, $value): void
-    {
-        try {
-            //====================================================================//
-            // Resolve Constraint Configuration
-            $this->options = $this->resolveOptions($options);
-            //====================================================================//
-            // Execute Constraint Verifications
-            $this->verify($value);
-        } catch (Exception $ex) {
-            $this->emergency(sprintf("Constraint verification Fail: %s", $ex->getMessage()));
-        } catch (TypeError $ex) {
-            $this->emergency(sprintf("Constraint verification Fail: %s", $ex->getMessage()));
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    final public function validateOptions(array $options): bool
+    public static function configureOptions(OptionsResolver $resolver): void
     {
         //====================================================================//
-        // Resolve Constraint Configuration
-        try {
-            $this->resolveOptions($options);
-        } catch (Exception $ex) {
-            $this->emergency(sprintf("Invalid Rules Options: %s", $ex->getMessage()));
-
-            return false;
-        } catch (TypeError $ex) {
-            $this->emergency(sprintf("Invalid Rules Options: %s", $ex->getMessage()));
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param array $options
-     *
-     * @throws Exception
-     *
-     * @return array
-     */
-    final protected function resolveOptions(array $options): array
-    {
-        $resolver = new OptionsResolver();
-        //====================================================================//
-        // Configure Options Resolver for Final Rule
-        $this->configureOptions($resolver);
-        //====================================================================//
-        // Verify None of Core Options are Defined by Rule
-        $commonOptions = array_intersect(self::CORE_OPTIONS, $resolver->getDefinedOptions());
-        if (!empty($commonOptions)) {
-            throw new Exception(sprintf(
-                "Rule %s define core rule options (%s), this is forbidden.",
-                static::class,
-                implode(", ", $commonOptions)
-            ));
-        }
-        //====================================================================//
-        // Configure Options Resolver for Final Rule
+        // Default Rule Code
+        $resolver->setDefault("rule", "value");
+        $resolver->setAllowedTypes("rule", array("string"));
         //====================================================================//
         // Default Data Collector
         $resolver->setDefault("collector", null);
@@ -179,6 +111,118 @@ abstract class AbstractRule implements RuleInterface
         // Key
         $resolver->setDefault("key", null);
         $resolver->setAllowedTypes("key", array("string"));
+    }
+
+    //====================================================================//
+    // EXECUTION
+    //====================================================================//
+
+    /**
+     * {@inheritDoc}
+     */
+    final public function execute(array $options, $value): bool
+    {
+        try {
+            //====================================================================//
+            // Resolve Constraint Configuration
+            $this->options = $this->resolveOptions($options);
+            //====================================================================//
+            // Execute Constraint Verifications
+            return $this->verify($value);
+        } catch (Exception $ex) {
+            $this->emergency(sprintf("Constraint verification Fail: %s", $ex->getMessage()));
+        } catch (TypeError $ex) {
+            $this->emergency(sprintf("Constraint verification Fail: %s", $ex->getMessage()));
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    final public function validateOptions(array $options): bool
+    {
+        //====================================================================//
+        // Resolve Constraint Configuration
+        try {
+            $this->resolveOptions($options);
+        } catch (Exception $ex) {
+            $this->emergency(
+                sprintf("Invalid Rules Options: %s", $ex->getMessage()),
+                array(get_class($this))
+            );
+
+            return false;
+        } catch (TypeError $ex) {
+            $this->emergency(
+                sprintf("Invalid Rules Options: %s", $ex->getMessage()),
+                array(get_class($this))
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    final public function forward(string $ruleCode, $value, array $options = null): bool
+    {
+        try {
+            //====================================================================//
+            // Load Rule
+            $rule = $this->getRuleByCode($ruleCode);
+            //====================================================================//
+            // Prepare Options for this Rule
+            $resolver = new OptionsResolver();
+            $rule->configureOptions($resolver);
+            //====================================================================//
+            // Execute Rule Verifications
+            return $rule->execute(
+                array_intersect_key($options ?? $this->options, array_flip($resolver->getDefinedOptions())),
+                $value
+            );
+        } catch (Exception $ex) {
+            $this->emergency(
+                sprintf("Rule verification Fail: %s", $ex->getMessage()),
+                array($ruleCode)
+            );
+        } catch (TypeError $ex) {
+            $this->emergency(
+                sprintf("Rule verification Fail: %s", $ex->getMessage()),
+                array($ruleCode)
+            );
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @throws Exception
+     *
+     * @return array
+     */
+    private function resolveOptions(array $options): array
+    {
+        $resolver = new OptionsResolver();
+        //====================================================================//
+        // Configure Options Resolver for Final Rule
+        $this->configureOptions($resolver);
+        //====================================================================//
+        // Verify None of Core Options are Defined by Rule
+        $missingOptions = array_diff(self::CORE_OPTIONS, $resolver->getDefinedOptions());
+        if (!empty($missingOptions)) {
+            throw new Exception(sprintf(
+                "Core options (%s) are missing in rule %s, did you forgot parent::configureOptions ??",
+                implode(", ", $missingOptions),
+                static::class
+            ));
+        }
 
         return $resolver->resolve($options);
     }

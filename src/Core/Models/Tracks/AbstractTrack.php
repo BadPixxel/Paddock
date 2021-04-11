@@ -14,7 +14,6 @@
 namespace BadPixxel\Paddock\Core\Models\Tracks;
 
 use BadPixxel\Paddock\Core\Models\LoggerAwareTrait;
-use BadPixxel\Paddock\Core\Models\Rules\AbstractRule;
 use BadPixxel\Paddock\Core\Models\RulesAwareTrait;
 use BadPixxel\Paddock\Core\Services\LogManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -88,6 +87,13 @@ abstract class AbstractTrack
     private $rules;
 
     /**
+     * Child Tracks
+     *
+     * @var ArrayCollection
+     */
+    private $children;
+
+    /**
      * Abstract Track Constructor.
      *
      * @param string $code
@@ -96,6 +102,7 @@ abstract class AbstractTrack
     {
         $this->code = $code;
         $this->rules = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     //====================================================================//
@@ -106,6 +113,8 @@ abstract class AbstractTrack
      * Import Track Options Array
      *
      * @param array $options
+     *
+     * @throws Exception
      *
      * @return bool
      */
@@ -140,13 +149,65 @@ abstract class AbstractTrack
         //====================================================================//
         // Detect Rules Options Overrides
         if ($resolvedOptions["overrides"]) {
-            $this->options = $resolvedOptions["overrides"];
+            $this->overrides = $resolvedOptions["overrides"];
+        }
+        //====================================================================//
+        // Detect Child Tracks
+        if ($resolvedOptions["children"] && is_array($resolvedOptions["children"])) {
+            foreach ($resolvedOptions["children"] as $child) {
+                $this->addChildren($child);
+            }
         }
         //====================================================================//
         // Load Constraints
         foreach ($resolvedOptions["rules"] as $key => $contraint) {
             if (!$this->addRule($key, $contraint)) {
                 return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Import Child Tracks Rules
+     *
+     * @param AbstractTrack[] $tracks
+     *
+     * @throws Exception
+     *
+     * @return bool
+     */
+    final public function importChildRules(array $tracks): bool
+    {
+        //====================================================================//
+        // Walk on Child Tracks
+        foreach ($this->getChildren() as $child) {
+            //====================================================================//
+            // Safety Check
+            if (!isset($tracks[$child['track']]) || !($tracks[$child['track']] instanceof AbstractTrack)) {
+                $this->emergency(sprintf("Child track with Code %s not found.", $child['track']));
+
+                return false;
+            }
+            $childTrack = $tracks[$child['track']];
+            //====================================================================//
+            // Walk on Child Track Rules
+            foreach ($childTrack->getRules() as $rule) {
+                //====================================================================//
+                // Build Rule Options
+                $ruleOptions = array_replace_recursive(
+                    $rule,
+                    array(
+                        'options' => $this->options,
+                    ),
+                    array(
+                        'options' => $child['options'],
+                    )
+                );
+                //====================================================================//
+                // Add Rule to Collection
+                $this->rules->add($ruleOptions);
             }
         }
 
@@ -237,11 +298,21 @@ abstract class AbstractTrack
     /**
      * Get Rules / Constraints
      *
-     * @return AbstractRule[]
+     * @return array[]
      */
     public function getRules(): array
     {
         return $this->rules->toArray();
+    }
+
+    /**
+     * Get Child Tracks
+     *
+     * @return array[]
+     */
+    public function getChildren(): array
+    {
+        return $this->children->toArray();
     }
 
     /**
@@ -271,17 +342,6 @@ abstract class AbstractTrack
     protected function addRule(string $key, array $definition): bool
     {
         //====================================================================//
-        // Build Rule Options
-        $ruleOptions = array_replace_recursive(
-            array(
-                'key' => $key,
-                'collector' => $this->collector,
-                'options' => $this->options,
-            ),
-            $definition,
-            $this->overrides
-        );
-        //====================================================================//
         // Detect & Validate Rule Code
         $ruleCode = (isset($definition['rule']) && is_string($definition['rule']))
             ?  $definition['rule']
@@ -291,6 +351,19 @@ abstract class AbstractTrack
 
             return false;
         }
+        //====================================================================//
+        // Build Rule Options
+        $ruleOptions = array_replace_recursive(
+            array(
+                'rule' => $ruleCode,
+                'key' => $key,
+                'collector' => $this->collector,
+                'options' => $this->options,
+            ),
+            $definition,
+            $this->overrides
+        );
+
         //====================================================================//
         // Validate Rule Options
         $this->setContext($this->getCode(), $ruleCode, "Rule Options", $ruleOptions);
@@ -302,6 +375,37 @@ abstract class AbstractTrack
         $this->rules->add($ruleOptions);
 
         return true;
+    }
+
+    /**
+     * Add Child Track
+     *
+     * @param mixed $child
+     *
+     * @return void
+     */
+    protected function addChildren($child): void
+    {
+        $trackCode = "undefined";
+        $options = array();
+        //====================================================================//
+        // Detect Child Track Code
+        if (is_string($child)) {
+            $trackCode = $child;
+        }
+        if (is_array($child) && isset($child["track"]) && is_string($child["track"])) {
+            $trackCode = $child["track"];
+            $options = (isset($child["options"]) && is_array($child["options"]))
+                ? $child["options"]
+                : array()
+            ;
+        }
+        //====================================================================//
+        // Store Child Config
+        $this->children[] = array(
+            "track" => $trackCode,
+            "options" => $options,
+        );
     }
 
     //====================================================================//
@@ -333,5 +437,8 @@ abstract class AbstractTrack
         // Rules Overrides
         $resolver->setDefault("overrides", array());
         $resolver->setAllowedTypes("overrides", array("array"));
+        // Child Tracks
+        $resolver->setDefault("children", array());
+        $resolver->setAllowedTypes("children", array("array"));
     }
 }

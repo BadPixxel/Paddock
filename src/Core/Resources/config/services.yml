@@ -23,22 +23,8 @@ services:
     BadPixxel\Paddock\Core\Services\TracksManager:
         public: true
 
-    BadPixxel\Paddock\Core\Services\Analyzer:
+    BadPixxel\Paddock\Core\Services\TracksRunner:
         public: true
-#        arguments:
-#            - '%sf_server_checker%'
-    
-    ########################################################################
-    #   SERVER COMMANDS
-    ########################################################################
-    
-#    badpixxel.server.command.check:
-#        class: BadPixxel\SfServerChecker\Command\CheckCommand
-#        tags:    [ console.command ]
-#
-#    badpixxel.server.command.reboot:
-#        class: BadPixxel\SfServerChecker\Command\RebootCommand
-#        tags:    [ console.command ]
 
     ########################################################################
     #   PADDOCK EVENTS SUBSCRIBER
@@ -48,9 +34,9 @@ services:
         resource: '../../EventSubscriber/'
         tags:    [ kernel.event_subscriber ]
 
-  ########################################################################
-  #   PADDOCK CLI COMMANDS
-  ########################################################################
+    ########################################################################
+    #   PADDOCK CLI COMMANDS
+    ########################################################################
 
     BadPixxel\Paddock\Core\Command\:
         resource: '../../Command/'

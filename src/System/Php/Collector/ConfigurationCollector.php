@@ -13,10 +13,14 @@
 
 namespace BadPixxel\Paddock\System\Php\Collector;
 
-use BadPixxel\Paddock\Core\Collector\AbstractCollector;
+use BadPixxel\Paddock\Core\Services\LogManager;
+use BadPixxel\Paddock\System\Php\Models\AbstractPhpCollector;
 use Exception;
 
-class ConfigurationCollector extends AbstractCollector
+/**
+ * Php INI Configuration Collector
+ */
+class ConfigurationCollector extends AbstractPhpCollector
 {
     //====================================================================//
     // DEFINITION
@@ -29,7 +33,7 @@ class ConfigurationCollector extends AbstractCollector
      */
     public static function getCode(): string
     {
-        return "php";
+        return "php-config";
     }
 
     /**
@@ -37,18 +41,50 @@ class ConfigurationCollector extends AbstractCollector
      */
     public static function getDescription(): string
     {
-        return "Collect list of php parameters";
+        return "Collect PHP INI Parameters";
     }
 
     //====================================================================//
-    // DATA COLLECTOR
+    // LOCAL PHP INI COLLECTOR
     //====================================================================//
 
     /**
      * {@inheritDoc}
      */
-    public function get(string $key): string
+    public function getLocalValue(string $key): string
     {
-        return PHP_VERSION;
+        //====================================================================//
+        // Override Rule Name for Logs
+        LogManager::getInstance()->setContextRule("PHP INI");
+        //====================================================================//
+        // Get Ini Value from Current Php Session
+        $value = ini_get($key);
+        if (false === $value) {
+            $this->error(sprintf("Configuration key %s doesn't exists!", $key));
+        }
+
+        return (string) $value;
+    }
+
+    //====================================================================//
+    // EXTERNAL PHP INI COLLECTOR
+    //====================================================================//
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getExternalValue(string $binary, string $key): string
+    {
+        //====================================================================//
+        // Override Rule Name for Logs
+        LogManager::getInstance()->setContextRule(ucfirst(basename($binary))." INI");
+        //====================================================================//
+        // Get Ini Value from Shell
+        $value = shell_exec($binary.' -r "echo ini_get(\''.$key.'\');"');
+        if (null === $value) {
+            $this->error(sprintf("Configuration key %s doesn't exists!", $key));
+        }
+
+        return (string) $value;
     }
 }

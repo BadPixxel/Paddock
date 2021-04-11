@@ -30,10 +30,12 @@ trait LoggerAwareTrait
      *
      * @param string  $message The log message
      * @param mixed[] $context The log context
+     *
+     * @return bool
      */
-    public function debug(string $message, array $context = null): void
+    public function debug(string $message, array $context = null): bool
     {
-        $this->log(Logger::DEBUG, $message, $context);
+        return $this->log(Logger::DEBUG, $message, $context);
     }
 
     /**
@@ -43,10 +45,12 @@ trait LoggerAwareTrait
      *
      * @param string  $message The log message
      * @param mixed[] $context The log context
+     *
+     * @return bool
      */
-    public function info(string $message, array $context = null): void
+    public function info(string $message, array $context = null): bool
     {
-        $this->log(Logger::INFO, $message, $context);
+        return $this->log(Logger::INFO, $message, $context);
     }
 
     /**
@@ -56,10 +60,12 @@ trait LoggerAwareTrait
      *
      * @param string  $message The log message
      * @param mixed[] $context The log context
+     *
+     * @return bool
      */
-    public function notice(string $message, array $context = null): void
+    public function notice(string $message, array $context = null): bool
     {
-        $this->log(Logger::NOTICE, $message, $context);
+        return $this->log(Logger::NOTICE, $message, $context);
     }
 
     /**
@@ -69,10 +75,12 @@ trait LoggerAwareTrait
      *
      * @param string  $message The log message
      * @param mixed[] $context The log context
+     *
+     * @return bool
      */
-    public function warning(string $message, array $context = null): void
+    public function warning(string $message, array $context = null): bool
     {
-        $this->log(Logger::WARNING, $message, $context);
+        return $this->log(Logger::WARNING, $message, $context);
     }
 
     /**
@@ -82,10 +90,12 @@ trait LoggerAwareTrait
      *
      * @param string  $message The log message
      * @param mixed[] $context The log context
+     *
+     * @return bool
      */
-    public function error(string $message, array $context = null): void
+    public function error(string $message, array $context = null): bool
     {
-        $this->log(Logger::ERROR, $message, $context);
+        return $this->log(Logger::ERROR, $message, $context);
     }
 
     /**
@@ -95,10 +105,12 @@ trait LoggerAwareTrait
      *
      * @param string  $message The log message
      * @param mixed[] $context The log context
+     *
+     * @return bool
      */
-    public function critical(string $message, array $context = null): void
+    public function critical(string $message, array $context = null): bool
     {
-        $this->log(Logger::CRITICAL, $message, $context);
+        return $this->log(Logger::CRITICAL, $message, $context);
     }
 
     /**
@@ -108,10 +120,12 @@ trait LoggerAwareTrait
      *
      * @param string  $message The log message
      * @param mixed[] $context The log context
+     *
+     * @return bool
      */
-    public function alert(string $message, array $context = null): void
+    public function alert(string $message, array $context = null): bool
     {
-        $this->log(Logger::ALERT, $message, $context);
+        return $this->log(Logger::ALERT, $message, $context);
     }
 
     /**
@@ -121,10 +135,12 @@ trait LoggerAwareTrait
      *
      * @param string  $message The log message
      * @param mixed[] $context The log context
+     *
+     * @return bool
      */
-    public function emergency(string $message, array $context = null): void
+    public function emergency(string $message, array $context = null): bool
     {
-        $this->log(Logger::EMERGENCY, (string) $message, $context);
+        return $this->log(Logger::EMERGENCY, (string) $message, $context);
     }
 
     /**
@@ -134,11 +150,13 @@ trait LoggerAwareTrait
      * @param string     $message
      * @param null|array $context
      *
-     * @return void
+     * @return bool
      */
-    public function log(int $level, string $message, ?array $context = null): void
+    public function log(int $level, string $message, ?array $context = null): bool
     {
         $this->getLogger()->log($level, $message, $context);
+
+        return ($level < Logger::ERROR);
     }
 
     //====================================================================//
