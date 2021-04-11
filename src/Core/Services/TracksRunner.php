@@ -45,6 +45,7 @@ class TracksRunner
      * Tracks Runner Constructor.
      *
      * @param TracksManager     $tracks
+     * @param RulesManager      $rules
      * @param CollectorsManager $collectors
      * @param LogManager        $logger
      */
@@ -115,24 +116,5 @@ class TracksRunner
         }
 
         return $this->logger->hasRecordsAboveLevel($minLogLevel);
-    }
-
-    /**
-     * Execute One Validator by Class.
-     *
-     * @param string $section        Analyze Mode
-     * @param string $validatorClass Validator Class
-     *
-     * @throws Exception
-     *
-     * @return null|array
-     */
-    public function verifyOne(string $section, string $validatorClass): ?array
-    {
-        //====================================================================//
-        // Init the Analyser
-        $this->init($section);
-
-        return $this->verifyCore($section, $validatorClass);
     }
 }
