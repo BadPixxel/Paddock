@@ -73,7 +73,12 @@ abstract class AbstractCommand extends Command
         // Setup Console Log if NO Output format defined
         if (empty($input->getOption("format"))) {
             $this->logger->pushHandler(new ConsoleHandler($output));
+
+            return;
         }
+        //====================================================================//
+        // Disable Console Decoration for Formatted Outputs
+        $output->setDecorated(false);
     }
 
     /**
@@ -93,7 +98,7 @@ abstract class AbstractCommand extends Command
         $formatterCode = $input->getOption("format");
         if ($formatterCode && is_string($formatterCode)) {
             $formatter = $this->logger->getFormatter($formatterCode);
-            $output->writeln($formatter->getStatus());
+            $output->write($formatter->getStatus());
 
             return $formatter->getStatusCode();
         }

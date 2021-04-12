@@ -22,6 +22,8 @@ services:
 
     BadPixxel\Paddock\Core\Services\TracksManager:
         public: true
+        arguments:
+            - "%kernel.project_dir%"
 
     BadPixxel\Paddock\Core\Services\TracksRunner:
         public: true

@@ -75,13 +75,13 @@ abstract class AbstractPhpCollector extends AbstractCollector implements PhpColl
      */
     public function hasBinary(string $binary): bool
     {
-        if (!isset(static::$php_binaries[$binary])) {
-            static::$php_binaries[$binary] = !empty(shell_exec($binary.' -v 2>&-'));
-            if (!static::$php_binaries[$binary]) {
+        if (!isset(self::$php_binaries[$binary])) {
+            self::$php_binaries[$binary] = !empty(shell_exec($binary.' -v 2>&-'));
+            if (!self::$php_binaries[$binary]) {
                 $this->error(sprintf("Php binary version %s not found!", $binary));
             }
         }
 
-        return static::$php_binaries[$binary];
+        return self::$php_binaries[$binary];
     }
 }

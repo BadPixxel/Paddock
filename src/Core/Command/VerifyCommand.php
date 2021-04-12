@@ -53,28 +53,34 @@ class VerifyCommand extends AbstractCommand
         // Init Paddock Command
         $this->init($input, $output);
         //====================================================================//
-        // Detect Tracks to Execute
-        $trackCode = $input->getArgument("track");
-        if (!empty($trackCode)) {
+        // Execute Command in a Sandbox
+        try {
             //====================================================================//
-            // Run ONE Track
-            if (!is_string($trackCode)) {
-                $this->error("Track Code is not a string!");
+            // Detect Tracks to Execute
+            $trackCode = $input->getArgument("track");
+            if (!empty($trackCode) && ("all" != $trackCode)) {
+                //====================================================================//
+                // Run ONE Track
+                if (!is_string($trackCode)) {
+                    $this->error("Track Code is not a string!");
+                    //====================================================================//
+                    // Close Paddock Command
+                    return $this->close($input, $output);
+                }
+                $this->runner->run($trackCode, 0);
                 //====================================================================//
                 // Close Paddock Command
                 return $this->close($input, $output);
             }
-            $this->runner->run($trackCode, 0);
             //====================================================================//
-            // Close Paddock Command
-            return $this->close($input, $output);
-        }
-        //====================================================================//
-        // Run All Active Tracks
-        foreach ($this->tracks->getAll() as $trackCode => $track) {
-            if ($track->isEnabled()) {
-                $this->runner->run($trackCode, 0);
+            // Run All Active Tracks
+            foreach ($this->tracks->getAll() as $trackCode => $track) {
+                if ($track->isEnabled()) {
+                    $this->runner->run($trackCode, 0);
+                }
             }
+        } catch (\Throwable $throwable) {
+            $this->error($throwable->getMessage());
         }
         //====================================================================//
         // Close Paddock Command

@@ -31,13 +31,16 @@ class NrpeFormatter extends AbstractFormatter
     /** NRPE STATE ERROR */
     const ERROR = 2;
 
+    /** NRPE STATE UNKNOWN */
+    const UNKNOWN = 3;
+
     /**
-     * @var int
+     * @var array
      */
     private $errors;
 
     /**
-     * @var int
+     * @var array
      */
     private $warnings;
 
@@ -46,10 +49,10 @@ class NrpeFormatter extends AbstractFormatter
      */
     public function getStatusCode(): int
     {
-        if ($this->errors) {
+        if (!empty($this->errors)) {
             return 2;
         }
-        if ($this->warnings) {
+        if (!empty($this->warnings)) {
             return 1;
         }
 
@@ -62,13 +65,21 @@ class NrpeFormatter extends AbstractFormatter
     public function getStatus(): string
     {
         if ($this->errors) {
-            return sprintf("CRITICAL: %d Errors detected (%d Warnings)", $this->errors, $this->warnings);
+            return sprintf(
+                "CRITICAL: %d Errors detected. %s",
+                count($this->errors),
+                implode(", ", $this->errors)
+            );
         }
         if ($this->warnings) {
-            return sprintf("WARNING: %d Warnings detected", $this->warnings);
+            return sprintf(
+                "WARNING: %d Warnings detected. %s",
+                count($this->warnings),
+                implode(", ", $this->warnings)
+            );
         }
 
-        return "OK";
+        return "All OK !!";
     }
 
     /**
@@ -76,7 +87,10 @@ class NrpeFormatter extends AbstractFormatter
      */
     public function getResponse(): Response
     {
-        return new Response($this->getStatus(), $this->errors ? Response::HTTP_EXPECTATION_FAILED: Response::HTTP_OK);
+        return new Response(
+            $this->getStatus(),
+            !empty($this->errors) ? Response::HTTP_EXPECTATION_FAILED: Response::HTTP_OK
+        );
     }
 
     /**
@@ -86,15 +100,15 @@ class NrpeFormatter extends AbstractFormatter
     {
         //====================================================================//
         // Count Numbers of Errors & Warnings
-        $this->errors = $this->warnings = 0;
+        $this->errors = $this->warnings = array();
         foreach ($this->records as $record) {
             if ($record['level'] >= Logger::ERROR) {
-                $this->errors++;
+                $this->errors[] = $record["message"];
 
                 continue;
             }
             if ($record['level'] >= Logger::WARNING) {
-                $this->warnings++;
+                $this->warnings[] = $record["message"];
             }
         }
     }

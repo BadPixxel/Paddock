@@ -21,6 +21,11 @@ use Exception;
 class TracksManager
 {
     /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
      * @var TracksManager
      */
     private static $instance;
@@ -36,10 +41,12 @@ class TracksManager
     /**
      * Service Constructor
      *
+     * @param string     $projectDir
      * @param LogManager $logManager
      */
-    public function __construct(LogManager $logManager)
+    public function __construct(string $projectDir, LogManager $logManager)
     {
+        $this->projectDir = $projectDir;
         $this->logManager = $logManager;
         //====================================================================//
         // Setup Static Access
@@ -105,13 +112,13 @@ class TracksManager
 
         //====================================================================//
         // Load Configuration Yaml File
-        $config = YamlLoader::parseFileWithImports(getcwd().'/paddock.yml');
+        $config = YamlLoader::parseFileWithImports($this->projectDir.'/paddock.yml');
         //====================================================================//
         // Safety Check - Tracks are Defined
         if (!is_array($config) || !isset($config["tracks"])) {
             throw new Exception(sprintf(
                 "No Tracks identified in %s.",
-                getcwd().'/paddock.yml'
+                $this->projectDir.'/paddock.yml'
             ));
         }
         //====================================================================//
