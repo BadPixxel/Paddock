@@ -13,11 +13,54 @@
 
 namespace BadPixxel\Paddock\Core\Loader;
 
+use Monolog\Logger;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 class YamlLoader
 {
+    /**
+     * Parses a YAML from Path with imports.
+     *
+     * @param string $path
+     * @param Logger $logger
+     *
+     * @return array
+     */
+    public static function parsePathWithImports(string $path, Logger $logger): array
+    {
+        //====================================================================//
+        // Load File Contents
+        $fileContents = FileLoader::load($path, $logger);
+        if (!$fileContents) {
+            return array();
+        }
+        //====================================================================//
+        // Parse Yaml Contents
+        $file = Yaml::parse($fileContents, 0);
+        //====================================================================//
+        // Check if Has Imports
+        if (!isset($file["imports"]) || !is_array($file["imports"])) {
+            return $file;
+        }
+        //====================================================================//
+        // Load Imports
+        $imports = array();
+        foreach ($file["imports"] as $import) {
+            try {
+                $imports = array_replace_recursive(
+                    $imports,
+                    self::parsePathWithImports($import, $logger)
+                );
+            } catch (ParseException $exception) {
+                continue;
+            }
+        }
+        unset($file["imports"]);
+
+        return array_replace_recursive($imports, $file);
+    }
+
     /**
      * Parses a YAML file with imports.
      *

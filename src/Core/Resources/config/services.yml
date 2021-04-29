@@ -12,6 +12,10 @@ services:
 
     BadPixxel\Paddock\Core\Services\LogManager: ~
 
+    BadPixxel\Paddock\Core\Services\ConfigurationManager:
+        arguments:
+            - "%kernel.project_dir%"
+
     BadPixxel\Paddock\Core\Services\RulesManager:
         public: true
 

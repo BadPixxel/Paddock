@@ -1,0 +1,83 @@
+################################################################################
+#
+# Copyright (C) 2020 BadPixxel <www.badpixxel.com>
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code.
+#
+################################################################################
+
+################################################################
+# Defined Pipeline Stages
+stages:
+  - tests
+  - deploy
+
+################################################################
+# Functional Tests
+################################################################
+
+.core_tests:    &core_tests
+    stage:      tests
+    tags:       [ Dedicated ]
+    services:
+      - mysql:5.7
+    ################################################################################
+    # Install & Configure Environment
+    before_script:
+      # Setup Travis
+      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/configure.sh  | sh
+      # Deploy Symfony Files
+      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/symfony/deploy.sh | sh
+      # Setup Symfony Version & Create Database
+      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/symfony/configure.sh | sh
+      # Install Symfony
+      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/symfony/install.sh | sh
+
+    ################################################################################
+    # Run Test Script
+    script:
+      # Execute Grumphp Testsuite
+      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/grumphp.sh  | sh
+      # Execute PhpUnit Tests
+      - vendor/bin/phpunit
+
+    ################################################################################
+    # Run After Script
+    after_script:
+      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/after.sh | sh
+
+tests:php-7.4:
+  image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
+  <<: *core_tests
+
+tests:php-7.3:
+  image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.3
+  <<: *core_tests
+
+tests:php-7.2:
+  image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.2
+  <<: *core_tests
+
+#################################################################
+## Build Documentation
+#################################################################
+pages:
+    image:      registry.gitlab.com/badpixxel-projects/php-sdk:jekyll
+    stage:      deploy
+    retry:      2
+    tags:       [ Dedicated ]
+    ################################################################################
+    # Run Test Script
+    script:
+        # Run Composer to Build Dependencies
+        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
+        # Export Configurations
+        - php bin/console paddock:export public/paddock.yml
+    artifacts:
+        paths:
+            - public

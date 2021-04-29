@@ -13,7 +13,6 @@
 
 namespace BadPixxel\Paddock\Core\Services;
 
-use BadPixxel\Paddock\Core\Loader\YamlLoader;
 use BadPixxel\Paddock\Core\Models\Tracks\AbstractTrack;
 use BadPixxel\Paddock\Core\Tracks\Track;
 use Exception;
@@ -24,6 +23,11 @@ class TracksManager
      * @var string
      */
     private $projectDir;
+
+    /**
+     * @var ConfigurationManager
+     */
+    private $configuration;
 
     /**
      * @var TracksManager
@@ -41,12 +45,14 @@ class TracksManager
     /**
      * Service Constructor
      *
-     * @param string     $projectDir
-     * @param LogManager $logManager
+     * @param string               $projectDir
+     * @param ConfigurationManager $configuration
+     * @param LogManager           $logManager
      */
-    public function __construct(string $projectDir, LogManager $logManager)
+    public function __construct(string $projectDir, ConfigurationManager $configuration, LogManager $logManager)
     {
         $this->projectDir = $projectDir;
+        $this->configuration = $configuration;
         $this->logManager = $logManager;
         //====================================================================//
         // Setup Static Access
@@ -75,6 +81,8 @@ class TracksManager
 
     /**
      * Get List of All Available Tracks
+     *
+     * @throws Exception
      *
      * @return Track[]
      */
@@ -105,20 +113,15 @@ class TracksManager
         if (isset($this->tracks)) {
             return count($this->tracks);
         }
-
         //====================================================================//
-        // TODO - Dev a real Track Loader Service!
-        //====================================================================//
-
-        //====================================================================//
-        // Load Configuration Yaml File
-        $config = YamlLoader::parseFileWithImports($this->projectDir.'/paddock.yml');
+        // Load Paddock Configuration Yaml File
+        $config = $this->configuration->load();
         //====================================================================//
         // Safety Check - Tracks are Defined
         if (!is_array($config) || !isset($config["tracks"])) {
             throw new Exception(sprintf(
                 "No Tracks identified in %s.",
-                $this->projectDir.'/paddock.yml'
+                $this->configuration->getConfigPath()
             ));
         }
         //====================================================================//
