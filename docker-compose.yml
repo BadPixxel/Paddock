@@ -1,0 +1,74 @@
+
+################################################################################
+#
+# Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code.
+#
+################################################################################
+
+################################################################################
+# Docker Compose File
+################################################################################
+
+version: "3.5"
+
+services:
+
+    ################################################################################
+    # Application Container
+    app:
+        image: 'registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4'
+        container_name: paddock-app
+        volumes:
+            - symfony-var:/var/www/html/var
+            - './:/var/www/html:ro'
+        hostname:           dev.paddock.local
+        networks:
+            paddock:        { ipv4_address: 172.202.0.10, aliases: [ dev.paddock.local ] }
+
+    ################################################################################
+    # MySQL Container
+    mysql:
+        image: mysql:5.7
+        container_name: paddock-mysql
+        environment:
+            - "MYSQL_ROOT_PASSWORD=admin"
+            - "MYSQL_DATABASE=paddock"
+        logging: { driver: "none" }
+        networks:
+            - paddock
+
+    ################################################################################
+    # PhpMyAdmin Container
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:5
+        container_name: phpmyadmin.paddock.local
+        logging: { driver: "none" }
+        depends_on:
+            - mysql
+        environment:
+            - PMA_HOST=mysql
+            - MYSQL_USER=admin
+            - MYSQL_ROOT_PASSWORD=admin
+            - MYSQL_PASSWORD=admin
+        networks:
+            paddock:      { ipv4_address: 172.202.0.200, aliases: [ phpmyadmin.paddock.local ] }
+
+volumes:
+    symfony-var: ~
+
+networks:
+    ################################################################################
+    # Default Private Network
+    paddock:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.202.0.0/24
+

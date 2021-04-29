@@ -13,6 +13,9 @@
 
 namespace BadPixxel\Paddock\System\Php\Models;
 
+/**
+ * Generic Php Collector Interface
+ */
 interface PhpCollectorInterface
 {
     //====================================================================//

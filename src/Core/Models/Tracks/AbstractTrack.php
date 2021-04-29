@@ -13,6 +13,7 @@
 
 namespace BadPixxel\Paddock\Core\Models\Tracks;
 
+use BadPixxel\Paddock\Core\Loader\EnvLoader;
 use BadPixxel\Paddock\Core\Models\LoggerAwareTrait;
 use BadPixxel\Paddock\Core\Models\RulesAwareTrait;
 use BadPixxel\Paddock\Core\Services\LogManager;
@@ -68,7 +69,7 @@ abstract class AbstractTrack
     /**
      * Default Data Collector Options
      *
-     * @var array
+     * @var string[]
      */
     private $options = array();
 
@@ -144,7 +145,9 @@ abstract class AbstractTrack
         //====================================================================//
         // Detect Default Data Collector Options
         if ($resolvedOptions["options"]) {
-            $this->options = $resolvedOptions["options"];
+            //====================================================================//
+            // Replace Options with Environment variables
+            $this->options = EnvLoader::replace($resolvedOptions["options"]);
         }
         //====================================================================//
         // Detect Rules Options Overrides

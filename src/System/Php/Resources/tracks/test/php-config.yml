@@ -1,0 +1,10 @@
+
+tracks:
+
+  test-php-config:
+      collector:      "php-config"
+      description:    "TEST - PHP Configuration"
+      rules:
+          # PHP Core Config
+          session.auto_start:               { eq: false }
+          upload_max_filesize:              { gt: 1M, eq: 2048k, lt: 1G }

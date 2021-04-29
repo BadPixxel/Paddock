@@ -1,0 +1,8 @@
+
+tracks:
+
+  test-php-vesrion:
+      collector:      "php-constant"
+      description:    "TEST - PHP Version"
+      rules:
+          PHP_VERSION:            { collector: "php-constant", rule: version, gt: { error: "7.2.0" }, lt: { warning: "8.0" } }

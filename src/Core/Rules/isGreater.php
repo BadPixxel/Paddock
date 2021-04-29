@@ -62,7 +62,7 @@ class isGreater extends AbstractRule
     {
         $result = 1;
         foreach (RulesHelper::getLevelCriteria($this->options, "gt") as $level => $constraint) {
-            if ($value > $constraint) {
+            if (RulesHelper::parse($value) > RulesHelper::parse($constraint)) {
                 $this->info("Value is greater than ".print_r($constraint, true), array($value));
 
                 continue;

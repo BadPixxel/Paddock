@@ -93,4 +93,30 @@ class RulesHelper
 
         return $criteria;
     }
+
+    /**
+     * Detect Size Values and Convert ty Bytes
+     *
+     * @param mixed $value
+     *
+     * @throws Exception
+     *
+     * @return mixed
+     */
+    public static function parse($value)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+        //====================================================================//
+        // Detect Size Values
+        $size = array('b','k','m','g','t','p');
+        $lastChar = strtolower($value[strlen($value) - 1]);
+        $position = array_search($lastChar, $size, true);
+        if ($position > 0) {
+            return pow(1024, $position) * (int) trim($value);
+        }
+
+        return $value;
+    }
 }

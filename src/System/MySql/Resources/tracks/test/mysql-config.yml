@@ -1,0 +1,16 @@
+
+tracks:
+
+  test-mysql-config:
+      collector:      "mysql-variable"
+      description:    "TEST - MySQL Configuration"
+      options:
+          url:        "DATABASE_URL"
+      rules:
+          # MySQL Core Config
+          '@@GLOBAL.innodb_data_file_path':               { eq: "ibdata1:12M:autoextend" }
+          '@@GLOBAL.key_buffer_size':                     { gte: "8M" }
+          '@@GLOBAL.max_allowed_packet':                  { gte: "4M" }
+          '@@GLOBAL.read_buffer_size':                    { gte: "100K" }
+          '@@GLOBAL.performance_schema':                  { eq: "1" }
+          '@@GLOBAL.table_definition_cache':              { gte: "1000" }

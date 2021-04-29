@@ -62,7 +62,7 @@ class isEqual extends AbstractRule
     {
         $result = 1;
         foreach (RulesHelper::getLevelCriteria($this->options, "eq") as $level => $constraint) {
-            if ($constraint == $value) {
+            if (RulesHelper::parse($constraint) == RulesHelper::parse($value)) {
                 $this->info("Value is equal to ".print_r($constraint, true), array($value));
 
                 continue;

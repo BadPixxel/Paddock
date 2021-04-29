@@ -44,6 +44,27 @@ class EnvLoader
     }
 
     /**
+     * Replace Values by Env Variables
+     */
+    public static function replace(array $values): array
+    {
+        //====================================================================//
+        // Walk on Input Values
+        foreach ($values as &$value) {
+            //====================================================================//
+            // Safety check
+            if (!is_string($value)) {
+                continue;
+            }
+            //====================================================================//
+            // Extract Env Value
+            $value = self::get($value) ?: $value;
+        }
+
+        return $values;
+    }
+
+    /**
      * Get Env Variable from Local or System
      *
      * @param string      $key

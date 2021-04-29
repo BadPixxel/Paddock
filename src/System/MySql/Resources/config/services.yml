@@ -1,0 +1,15 @@
+
+services:
+
+    # default configuration for services in *this* file
+    _defaults:
+        autowire:       true
+        autoconfigure:  true
+
+    ########################################################################
+    #   DATA COLLECTORS
+    ########################################################################
+
+    BadPixxel\Paddock\System\MySql\Collector\:
+        resource: '../../Collector/'
+        tags:    [ 'paddock.collector' ]

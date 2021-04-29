@@ -1,22 +1,9 @@
 
 imports:
-    - src/System/Php/Resources/tracks/prod/php-config.yml
+    # Minimal Php Verifications
+    - src/System/Php/Resources/tracks/test/php-version.yml
+    - src/System/Php/Resources/tracks/test/php-config.yml
+    - src/System/Php/Resources/tracks/test/php-extensions.yml
 
-
-tracks:
-
-    php-config:
-        description:    "Verify Php Configurations"
-        children:
-            - bp-prod-php-config
-    #            - track: bp-prod-php-config
-    #              options:
-    #                  bin:            "/usr/bin/php7.4"
-
-    php-extensions:
-        description:    "Verify Presence of Php Extensions"
-        children:
-            - bp-prod-php-ext
-            - { track: bp-prod-php-ext, options: { bin: "/usr/bin/php7.2" } }
-            - { track: bp-prod-php-ext, options: { bin: "/usr/bin/php7.3" } }
-            - { track: bp-prod-php-ext, options: { bin: "/usr/bin/php7.4" } }
+    # Minimal MySql Verifications
+    - src/System/MySql/Resources/tracks/test/mysql-config.yml

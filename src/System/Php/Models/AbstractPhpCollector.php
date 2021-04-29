@@ -16,6 +16,9 @@ namespace BadPixxel\Paddock\System\Php\Models;
 use BadPixxel\Paddock\Core\Collector\AbstractCollector;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Base Class for PHP Collectors
+ */
 abstract class AbstractPhpCollector extends AbstractCollector implements PhpCollectorInterface
 {
     /**

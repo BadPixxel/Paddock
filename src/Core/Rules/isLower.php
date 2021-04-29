@@ -62,7 +62,7 @@ class isLower extends AbstractRule
     {
         $result = 1;
         foreach (RulesHelper::getLevelCriteria($this->options, "lt") as $level => $constraint) {
-            if ($value < $constraint) {
+            if (RulesHelper::parse($value) < RulesHelper::parse($constraint)) {
                 $this->info("Value is lower than ".print_r($constraint, true), array($value));
 
                 continue;
