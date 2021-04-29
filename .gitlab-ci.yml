@@ -29,14 +29,8 @@ stages:
     ################################################################################
     # Install & Configure Environment
     before_script:
-      # Setup Travis
-      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/configure.sh  | sh
-      # Deploy Symfony Files
-      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/symfony/deploy.sh | sh
-      # Setup Symfony Version & Create Database
-      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/symfony/configure.sh | sh
-      # Install Symfony
-      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/symfony/install.sh | sh
+      # Run Composer to Build Dependencies
+      - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
 
     ################################################################################
     # Run Test Script
