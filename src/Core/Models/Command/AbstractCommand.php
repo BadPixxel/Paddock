@@ -103,6 +103,6 @@ abstract class AbstractCommand extends Command
             return $formatter->getStatusCode();
         }
 
-        return $this->logger->hasErrors() ? Command::FAILURE : Command::SUCCESS;
+        return $this->logger->hasErrors() ? 1 : 0;
     }
 }

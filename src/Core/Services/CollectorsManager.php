@@ -15,7 +15,7 @@ namespace BadPixxel\Paddock\Core\Services;
 
 use BadPixxel\Paddock\Core\Collector\AbstractCollector;
 use Exception;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Manager for Paddock Data Collectors

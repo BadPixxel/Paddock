@@ -16,7 +16,7 @@ namespace BadPixxel\Paddock\Core\Services;
 use BadPixxel\Paddock\Core\Events\GetConstraintsEvent;
 use BadPixxel\Paddock\Core\Models\Rules\AbstractRule;
 use Exception;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Manager for Paddock Rules / Constraints

@@ -22,16 +22,15 @@ class JsonFormatter extends BaseFormatter
 {
     /**
      * {@inheritdoc}
+     *
+     * @param int $depth
      */
-    public function normalize($data, int $depth = 0)
+    public function normalize($data, $depth = 0)
     {
         $normalized = parent::normalize($data, $depth);
 
         if (1 == $depth) {
             unset($normalized["datetime"], $normalized["level"], $normalized["level_name"], $normalized["channel"], $normalized["extra"], $normalized["formatted"]);
-
-//            dump($normalized);
-//            exit;
         }
 
         return $normalized;
