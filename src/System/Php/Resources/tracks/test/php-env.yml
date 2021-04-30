@@ -1,0 +1,10 @@
+
+tracks:
+
+  test-php-vesrion:
+      collector:      "php-env"
+      description:    "TEST - PHP Environment"
+      rules:
+          PHP_VERSION:    { rule: version, gt: { error: "7.2.0" }, lt: { warning: "8.0" } }
+          PATH:           { ne: true }
+          APP_ENV:        { ne: true }

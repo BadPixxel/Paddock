@@ -4,6 +4,7 @@ imports:
     - src/System/Php/Resources/tracks/test/php-version.yml
     - src/System/Php/Resources/tracks/test/php-config.yml
     - src/System/Php/Resources/tracks/test/php-extensions.yml
+    - src/System/Php/Resources/tracks/test/php-env.yml
 
     # Minimal MySql Verifications
     - src/System/MySql/Resources/tracks/test/mysql-config.yml
