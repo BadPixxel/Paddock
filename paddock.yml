@@ -7,3 +7,6 @@ imports:
 
     # Minimal MySql Verifications
     - src/System/MySql/Resources/tracks/test/mysql-config.yml
+
+    # Minimal Nrpe Verifications
+    - src/Apps/Nrpe/Resources/tracks/test/nrpe-config.yml
