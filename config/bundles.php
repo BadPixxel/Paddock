@@ -16,7 +16,10 @@ return array(
     BadPixxel\Paddock\Core\CoreBundle::class => array('all' => true),
     BadPixxel\Paddock\System\Php\PaddockPhpBundle::class => array('all' => true),
     BadPixxel\Paddock\System\MySql\PaddockMySqlBundle::class => array('all' => true),
+    BadPixxel\Paddock\System\MongoDb\PaddockMongoDbBundle::class => array('all' => true),
     BadPixxel\Paddock\Apps\Nrpe\PaddockNrpeBundle::class => array('all' => true),
     Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => array('all' => true),
     Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => array('all' => true),
+    Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle::class => array('all' => true),
+    Knp\Bundle\GaufretteBundle\KnpGaufretteBundle::class => array('all' => true),
 );

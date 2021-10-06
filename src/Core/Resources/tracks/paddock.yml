@@ -1,0 +1,17 @@
+
+imports:
+    # Minimal Php Verifications
+    - System/Php/Resources/tracks/test/php-version.yml
+    - System/Php/Resources/tracks/test/php-config.yml
+    - System/Php/Resources/tracks/test/php-extensions.yml
+    - System/Php/Resources/tracks/test/php-env.yml
+
+    # Minimal MySql Verifications
+    - System/MySql/Resources/tracks/test/mysql-config.yml
+
+    # Minimal Mongo Db Verifications
+    - System/MongoDb/Resources/tracks/test/mongo-config.yml
+    - System/MongoDb/Resources/tracks/test/mongo-status.yml
+
+    # Minimal Nrpe Verifications
+    - Apps/Nrpe/Resources/tracks/test/nrpe-config.yml

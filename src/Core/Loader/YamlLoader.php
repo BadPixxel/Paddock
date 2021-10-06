@@ -13,6 +13,7 @@
 
 namespace BadPixxel\Paddock\Core\Loader;
 
+use Gaufrette\Filesystem;
 use Monolog\Logger;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
@@ -22,16 +23,17 @@ class YamlLoader
     /**
      * Parses a YAML from Path with imports.
      *
-     * @param string $path
-     * @param Logger $logger
+     * @param Filesystem $filesystem
+     * @param string     $path
+     * @param Logger     $logger
      *
      * @return array
      */
-    public static function parsePathWithImports(string $path, Logger $logger): array
+    public static function parseWithImports(Filesystem $filesystem, string $path, Logger $logger): array
     {
         //====================================================================//
         // Load File Contents
-        $fileContents = FileLoader::load($path, $logger);
+        $fileContents = FileLoader::load($filesystem, $path, $logger);
         if (!$fileContents) {
             return array();
         }
@@ -50,48 +52,7 @@ class YamlLoader
             try {
                 $imports = array_replace_recursive(
                     $imports,
-                    self::parsePathWithImports($import, $logger)
-                );
-            } catch (ParseException $exception) {
-                continue;
-            }
-        }
-        unset($file["imports"]);
-
-        return array_replace_recursive($imports, $file);
-    }
-
-    /**
-     * Parses a YAML file with imports.
-     *
-     * @param string $filename
-     * @param int    $flags
-     *
-     * @return array
-     */
-    public static function parseFileWithImports(string $filename, int $flags = 0): array
-    {
-        //====================================================================//
-        // Load Configuration Yaml File
-        $file = Yaml::parseFile($filename, $flags);
-        //====================================================================//
-        // Check if Has Imports
-        if (!isset($file["imports"]) || !is_array($file["imports"])) {
-            return $file;
-        }
-        //====================================================================//
-        // Load Imports
-        $imports = array();
-        foreach ($file["imports"] as $importFile) {
-            $realPath = realpath(\dirname($filename)."/".$importFile);
-            if (!$realPath || !is_file($realPath)) {
-                continue;
-            }
-
-            try {
-                $imports = array_replace_recursive(
-                    $imports,
-                    Yaml::parseFile($realPath, $flags)
+                    self::parseWithImports($filesystem, $import, $logger)
                 );
             } catch (ParseException $exception) {
                 continue;

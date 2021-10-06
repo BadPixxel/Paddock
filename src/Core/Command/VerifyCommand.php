@@ -14,6 +14,7 @@
 namespace BadPixxel\Paddock\Core\Command;
 
 use BadPixxel\Paddock\Core\Models\Command\AbstractCommand;
+use Exception;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -42,6 +43,8 @@ class VerifyCommand extends AbstractCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @throws Exception
      *
      * @return int
      *

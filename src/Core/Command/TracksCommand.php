@@ -13,6 +13,7 @@
 
 namespace BadPixxel\Paddock\Core\Command;
 
+use BadPixxel\Paddock\Core\Services\ConfigurationManager;
 use BadPixxel\Paddock\Core\Services\LogManager;
 use BadPixxel\Paddock\Core\Services\TracksManager;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
@@ -26,6 +27,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class TracksCommand extends Command
 {
+    /** @var ConfigurationManager */
+    private $configurationManager;
+
     /** @var TracksManager */
     private $tracksManager;
 
@@ -38,10 +42,11 @@ class TracksCommand extends Command
      * @param TracksManager $tracksManager
      * @param LogManager    $logManager
      */
-    public function __construct(TracksManager $tracksManager, LogManager $logManager)
+    public function __construct(ConfigurationManager $configurationManager, TracksManager $tracksManager, LogManager $logManager)
     {
         parent::__construct();
 
+        $this->configurationManager = $configurationManager;
         $this->tracksManager = $tracksManager;
         $this->logManager = $logManager;
     }
@@ -89,6 +94,13 @@ class TracksCommand extends Command
             ));
         }
         $table->render();
+        //====================================================================//
+        // Show Tracks Configuration Source
+        $output->writeln(sprintf(
+            "<comment>Configured %d tracks from %s</comment>",
+            count($tracks),
+            $this->configurationManager->getConfigPath()
+        ));
 
         return 0;
     }

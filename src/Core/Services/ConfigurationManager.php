@@ -14,6 +14,7 @@
 namespace BadPixxel\Paddock\Core\Services;
 
 use BadPixxel\Paddock\Core\Loader\EnvLoader;
+use BadPixxel\Paddock\Core\Loader\FileLoader;
 use BadPixxel\Paddock\Core\Loader\YamlLoader;
 use BadPixxel\Paddock\Core\Models\LoggerAwareTrait;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -109,10 +110,23 @@ class ConfigurationManager
      */
     public function loadFromPath(string $path = null): array
     {
+        global $filesystem;
+
         //====================================================================//
-        // Load Config from Path
-        $configuration = YamlLoader::parsePathWithImports(
-            $path ?? $this->getConfigPath(),
+        // Detect Configuration Filesystem from Config Path
+        if (!isset($filesystem)) {
+            $filesystem = FileLoader::getFilesystem($this->getConfigPath(), $this->getLogger()->getLogger());
+        }
+        if (empty($filesystem)) {
+            $this->error("No Configuration Loaded");
+
+            return array();
+        }
+        //====================================================================//
+        // Load Configuration
+        $configuration = YamlLoader::parseWithImports(
+            $filesystem,
+            $path ?? (string) FileLoader::getPath($this->getConfigPath()),
             $this->getLogger()->getLogger()
         );
         //====================================================================//

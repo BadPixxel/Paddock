@@ -24,7 +24,7 @@ services:
     # Application Container
     app:
         image: 'registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4'
-        container_name: paddock-app
+        container_name: dev.paddock.local
         volumes:
             - symfony-var:/var/www/html/var
             - './:/var/www/html:ro'
@@ -36,13 +36,35 @@ services:
     # MySQL Container
     mysql:
         image: mysql:5.7
-        container_name: paddock-mysql
+        container_name: mysql.paddock.local
         environment:
             - "MYSQL_ROOT_PASSWORD=admin"
             - "MYSQL_DATABASE=paddock"
         logging: { driver: "none" }
         networks:
-            - paddock
+            paddock:        { ipv4_address: 172.202.0.11, aliases: [ mysql.paddock.local ] }
+
+    ################################################################################
+    # MongoDb Container
+    mongodb:
+        image: mongo:latest
+        container_name: mongo.paddock.local
+        logging: { driver: "none" }
+        networks:
+            paddock:        { ipv4_address: 172.202.0.12, aliases: [ mongo.paddock.local ] }
+
+    ################################################################################
+    # Configuration Storage Container
+    configs:
+        image: atmoz/sftp:alpine
+        container_name: configs.paddock.local
+        volumes:
+            - ./src:/home/admin
+        ports:
+            - "2222:22"
+        command: admin:p@ssword:1001
+        networks:
+            paddock:      { ipv4_address: 172.202.0.20, aliases: [ configs.paddock.local ] }
 
     ################################################################################
     # PhpMyAdmin Container
