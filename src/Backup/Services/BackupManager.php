@@ -64,10 +64,10 @@ class BackupManager
      * Service Constructor
      *
      * @param EventDispatcherInterface $dispatcher
-     * @param ConfigurationManager $configuration
-     * @param SourcesManager $sourcesManager
-     * @param LocationsManager $locationsManager
-     * @param LogManager $logManager
+     * @param ConfigurationManager     $configuration
+     * @param SourcesManager           $sourcesManager
+     * @param LocationsManager         $locationsManager
+     * @param LogManager               $logManager
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
