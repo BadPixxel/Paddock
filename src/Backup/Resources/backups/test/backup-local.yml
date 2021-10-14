@@ -1,0 +1,8 @@
+
+backups:
+
+    local-to-local:
+        description:    "Local to Local Backup"
+        source:         "file:///var/www/source"
+        source-options:
+            chmod:      777

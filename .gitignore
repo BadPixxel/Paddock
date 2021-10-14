@@ -28,3 +28,4 @@
 /.env
 /symfony.lock
 /.php-cs-fixer.cache
+/tests/source/

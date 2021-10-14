@@ -1,0 +1,46 @@
+
+services:
+
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    ########################################################################
+    #   PADDOCK CORE SERVICES
+    ########################################################################
+
+    BadPixxel\Paddock\Backup\Services\SourcesManager:
+        arguments:
+            - !tagged_iterator { tag: 'paddock.source', default_index_method: 'getCode' }
+
+    BadPixxel\Paddock\Backup\Services\LocationsManager:
+        arguments:
+            - !tagged_iterator { tag: 'paddock.location', default_index_method: 'getCode' }
+
+    BadPixxel\Paddock\Backup\Services\BackupManager:
+        tags:
+            - { name: kernel.event_listener, event: BadPixxel\Paddock\Backup\Events\GetOperationsEvent, method: onGetOperationsEvent }
+
+    ########################################################################
+    #   PADDOCK BACKUP SOURCES
+    ########################################################################
+
+    BadPixxel\Paddock\Backup\Sources\FilesSource:
+        tags:    [ paddock.source ]
+
+    ########################################################################
+    #   PADDOCK BACKUP LOCATIONS
+    ########################################################################
+
+    BadPixxel\Paddock\Backup\Locations\:
+        resource: '../../Locations/'
+        tags:    [ paddock.location ]
+
+    ########################################################################
+    #   PADDOCK CLI COMMANDS
+    ########################################################################
+
+    BadPixxel\Paddock\Backup\Command\:
+        resource: '../../Command/'
+        tags:    [ console.command ]
