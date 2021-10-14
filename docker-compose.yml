@@ -28,6 +28,8 @@ services:
         volumes:
             - symfony-var:/var/www/html/var
             - './:/var/www/html:ro'
+            - './tests/source:/var/www/source'
+            - ./docker/ssh-config:/etc/ssh:ro
         hostname:           dev.paddock.local
         networks:
             paddock:        { ipv4_address: 172.202.0.10, aliases: [ dev.paddock.local ] }
@@ -67,6 +69,22 @@ services:
             paddock:      { ipv4_address: 172.202.0.20, aliases: [ configs.paddock.local ] }
 
     ################################################################################
+    # Rdiff Backup Location Storage Container
+    backup-1:
+        image: achaiah/docker-rdiff-backup
+        container_name: backup-1.paddock.local
+        environment:
+          - CNTUSER=admin
+          - CNTPASS=p@ssword
+          - ROOTPASS=p@ssword
+          - PGID=1000
+          - PUID=1000
+        volumes:
+            - ./docker/ssh-config:/etc/ssh:ro
+        networks:
+            paddock:      { ipv4_address: 172.202.0.31, aliases: [ backup-1.paddock.local ] }
+
+    ################################################################################
     # PhpMyAdmin Container
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:5
@@ -83,7 +101,7 @@ services:
             paddock:      { ipv4_address: 172.202.0.200, aliases: [ phpmyadmin.paddock.local ] }
 
 volumes:
-    symfony-var: ~
+    symfony-var:    ~
 
 networks:
     ################################################################################
@@ -93,4 +111,3 @@ networks:
         ipam:
             config:
                 - subnet: 172.202.0.0/24
-

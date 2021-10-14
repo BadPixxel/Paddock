@@ -78,6 +78,23 @@ class ConfigurationManager
     }
 
     /**
+     * Get Paddock Backup Locations Paths
+     *
+     * @return null|string
+     */
+    public function getBackupLocations(): ?string
+    {
+        //====================================================================//
+        // Load Backup Locations Paths from Env
+        $backupPaths = EnvLoader::get("PADDOCK_BACKUP", "");
+        if (empty($backupPaths)) {
+            return null;
+        }
+
+        return $backupPaths;
+    }
+
+    /**
      * Load Paddock Configuration
      */
     public function load(): array

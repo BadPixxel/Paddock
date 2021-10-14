@@ -13,3 +13,12 @@ services:
     BadPixxel\Paddock\System\MySql\Collector\:
         resource: '../../Collector/'
         tags:    [ 'paddock.collector' ]
+
+
+    ########################################################################
+    #   DATA FIXTURES
+    ########################################################################
+
+    BadPixxel\Paddock\System\MySql\Fixtures\:
+        resource: '../../Fixtures/'
+        tags:    [ 'doctrine.fixture.orm' ]

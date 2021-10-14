@@ -1,0 +1,23 @@
+
+services:
+
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    ########################################################################
+    #   PADDOCK EVENTS SUBSCRIBER
+    ########################################################################
+
+    BadPixxel\Paddock\System\Shell\EventSubscriber\:
+        resource: '../../EventSubscriber/'
+        tags:    [ kernel.event_subscriber ]
+
+    ########################################################################
+    #   DATA COLLECTORS
+    ########################################################################
+
+    BadPixxel\Paddock\System\Shell\Collector\:
+        resource: '../../Collector/'
+        tags:    [ 'paddock.collector' ]

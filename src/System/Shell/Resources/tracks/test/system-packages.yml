@@ -1,0 +1,11 @@
+
+tracks:
+
+    test-system-packages:
+        collector:      "apt-version"
+        description:    "TEST - System Installed Packages"
+        overrides:
+            rule: version
+        rules:
+            curl:             { ne: true, gt: "7.50" }
+            apache2:          { ne: true, gt: { error: "2.4.0" } }

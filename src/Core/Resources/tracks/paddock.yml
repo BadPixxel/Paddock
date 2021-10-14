@@ -1,5 +1,8 @@
 
 imports:
+    # Minimal System Verifications
+    - System/Shell/Resources/tracks/test/system-packages.yml
+
     # Minimal Php Verifications
     - System/Php/Resources/tracks/test/php-version.yml
     - System/Php/Resources/tracks/test/php-config.yml
@@ -15,3 +18,6 @@ imports:
 
     # Minimal Nrpe Verifications
     - Apps/Nrpe/Resources/tracks/test/nrpe-config.yml
+
+    # Backup Operations
+    - Backup/Resources/backups/test/backup-local.yml

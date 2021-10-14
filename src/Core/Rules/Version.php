@@ -53,6 +53,8 @@ class Version extends AbstractRule
     {
         parent::configureOptions($resolver);
 
+        RulesHelper::addScalarOption($resolver, "empty");   // Value is empty
+        RulesHelper::addScalarOption($resolver, "ne");      // Value is not empty
         RulesHelper::addScalarOption($resolver, "eq");      // Version is equal
         RulesHelper::addScalarOption($resolver, "gt");      // Version is greater
         RulesHelper::addScalarOption($resolver, "gte");     // Version is greater or equal
@@ -68,6 +70,16 @@ class Version extends AbstractRule
         //====================================================================//
         // WHATEVER => Scalar Value Required
         if (!$this->forward(isScalar::getCode(), $value)) {
+            return false;
+        }
+        //====================================================================//
+        // Empty Value Required
+        if (!$this->forward(isEmpty::getCode(), $value)) {
+            return false;
+        }
+        //====================================================================//
+        // Not Empty Value Required
+        if (!$this->forward(isNotEmpty::getCode(), $value)) {
             return false;
         }
         $value = (string) $value;

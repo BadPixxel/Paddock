@@ -11,3 +11,6 @@ imports:
 
     # Minimal Nrpe Verifications
     - src/Apps/Nrpe/Resources/tracks/test/nrpe-config.yml
+
+    # Backup Operations
+    - src/Backup/Resources/backups/test/backup-local.yml

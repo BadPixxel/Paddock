@@ -126,7 +126,6 @@ class CommandsManager
         $rawConfig .= "# Paddock Tracks Commands".PHP_EOL;
         foreach ($allTracks as $code => $track) {
             $rawConfig .= $this->buildCommand("paddock_".$code, $code, $binary).PHP_EOL;
-            ;
         }
         //====================================================================//
         // Reset Logger Context
@@ -201,12 +200,4 @@ class CommandsManager
             trim($track)
         );
     }
-
-//    /**
-//     * Prepare Paddock Configuration for Export
-//     */
-//    public function export(array $configuration): array
-//    {
-//        return $configuration;
-//    }
 }

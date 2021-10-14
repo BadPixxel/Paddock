@@ -6,40 +6,46 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^7.2",
-        "ext-ctype": "*",
-        "ext-iconv": "*",
-        "ext-json": "*",
-        "composer/package-versions-deprecated": "1.11.99.4",
-        "doctrine/doctrine-bundle": "^2.4",
-        "doctrine/doctrine-migrations-bundle": "^3.1",
-        "doctrine/orm": "^2.10",
-        "doctrine/mongodb-odm-bundle": "^4.0",
-        "doctrine/cache": "^1.4.0",
-        "gaufrette/phpseclib-sftp-adapter": "^0.4.0",
-        "knplabs/knp-gaufrette-bundle": "^0.7.1",
-        "symfony/console": "4.4.*",
-        "symfony/dotenv": "4.4.*",
-        "symfony/flex": "^1.3.1",
-        "symfony/framework-bundle": "4.4.*",
-        "symfony/monolog-bridge": "4.4.*",
-        "symfony/proxy-manager-bridge": "4.4.*",
-        "symfony/yaml": "4.4.*"
+        "php":          "^7.2",
+        "ext-ctype":    "*",
+        "ext-iconv":    "*",
+        "ext-json":     "*",
+        "ext-zip":      "*",
+        "composer/package-versions-deprecated":     "1.11.99.4",
+
+        "doctrine/doctrine-bundle":                 "^2.4",
+        "doctrine/doctrine-migrations-bundle":      "^3.1",
+        "doctrine/orm":                             "^2.10",
+        "doctrine/mongodb-odm-bundle":              "^4.0",
+        "doctrine/cache":                           "^1.4.0",
+
+        "symfony/console":                          "4.4.*",
+        "symfony/dotenv":                           "4.4.*",
+        "symfony/flex":                             "^1.3.1",
+        "symfony/framework-bundle":                 "4.4.*",
+        "symfony/monolog-bridge":                   "4.4.*",
+        "symfony/proxy-manager-bridge":             "4.4.*",
+        "symfony/yaml":                             "4.4.*",
+
+        "gaufrette/phpseclib-sftp-adapter":         "^0.4.0",
+        "knplabs/knp-gaufrette-bundle":             "^0.7.1"
     },
     "require-dev": {
-        "badpixxel/php-sdk":                            "dev-main"
+        "badpixxel/php-sdk":                        "dev-main",
+        "doctrine/doctrine-fixtures-bundle":        "^3.4"
     },
     "config": {
-        "optimize-autoloader": true,
+        "optimize-autoloader":                      true,
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages":                            true
     },
     "autoload": {
         "psr-4": {
             "BadPixxel\\Paddock\\": "src/"
-        }
+        },
+        "exclude-from-classmap": ["tests/source"]
     },
     "autoload-dev": {
         "psr-4": {
