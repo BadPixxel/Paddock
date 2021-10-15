@@ -29,3 +29,5 @@
 /symfony.lock
 /.php-cs-fixer.cache
 /tests/source/
+!/.env.dev
+!/.env.test
