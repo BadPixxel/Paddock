@@ -74,6 +74,8 @@ pages:
         - cp .env.test .env
         # Run Composer to Build Dependencies
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
+        # Build Documentation
+        - php vendor/bin/grumphp run --tasks=build-docs
         # Export Configurations
         - php bin/console paddock:export public/paddock.yml
     artifacts:
