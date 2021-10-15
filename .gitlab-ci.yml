@@ -71,6 +71,7 @@ pages:
     ################################################################################
     # Run Test Script
     script:
+        - cp .env.test .env
         # Run Composer to Build Dependencies
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
         # Export Configurations

@@ -30,3 +30,6 @@
 /tests/source/
 !/.env.dev
 !/.env.test
+/tests/Fixtures/
+/.gh-pages/
+/public/

@@ -23,8 +23,17 @@
 # Override Config. for Php Core Module
 parameters:
     mode:               "badpixxel"
+    exclude:            ['vendor', 'var', 'doc', "tests/Fixtures"]
+
+    # For Building Splash Documentation
+    doc-src:            '/src/Docs'
+    doc-target:         '/public'
+
+    # For Building Splash Module
+    mod-enable:         false
 
 #############################################
 # Import Config. from Php Core Module
 imports:
     - "./vendor/badpixxel/php-sdk/grumphp/generic.yml"
+    - "./vendor/badpixxel/php-sdk/grumphp/extras.yml"
