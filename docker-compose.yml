@@ -64,7 +64,7 @@ services:
             - ./src:/home/admin
         ports:
             - "2222:22"
-        command: admin:p@ssword:1001
+        command: admin:p@ssword
         networks:
             paddock:      { ipv4_address: 172.202.0.20, aliases: [ configs.paddock.local ] }
 
