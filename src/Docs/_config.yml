@@ -24,7 +24,7 @@ title:          Paddock Toolkit
 # Subtitle of the Site (Generally DOC)
 subtitle:       DOC
 # the sub-path of your site, e.g. /blog
-baseurl:        "/Paddock"
+baseurl:        "/paddock"
 # Description of the Bundle/Module
 description:    "Welcome to the Paddock Documentation
 
