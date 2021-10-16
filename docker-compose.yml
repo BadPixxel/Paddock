@@ -35,6 +35,14 @@ services:
             paddock:        { ipv4_address: 172.202.0.10, aliases: [ dev.paddock.local ] }
 
     ################################################################################
+    # Paddock Deploy Container
+    paddock:
+        build:
+            context: ./docker/paddock
+        container_name: deploy.paddock.local
+        hostname:           deploy.paddock.local
+
+    ################################################################################
     # MySQL Container
     mysql:
         image: mysql:5.7
