@@ -17,6 +17,7 @@ FROM registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
 # Clone Badpixxel Paddpock Project
 RUN git clone https://github.com/BadPixxel/Paddock.git --depth=1 /var/www/html
 ADD .env /var/www/html
+ENV PADDOCK_SCRIPT_DIR: '/var/www/html/scripts'
 
 ################################################################################
 # Install Composer
