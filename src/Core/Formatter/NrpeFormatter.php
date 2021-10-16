@@ -66,16 +66,18 @@ class NrpeFormatter extends AbstractFormatter
     {
         if ($this->errors) {
             return sprintf(
-                "CRITICAL: %d Errors detected. %s",
+                "CRITICAL: %d Errors detected. %s %s",
                 count($this->errors),
-                implode(", ", $this->errors)
+                implode(", ", $this->errors),
+                $this->getMetrics()
             );
         }
         if ($this->warnings) {
             return sprintf(
-                "WARNING: %d Warnings detected. %s",
+                "WARNING: %d Warnings detected. %s %s",
                 count($this->warnings),
-                implode(", ", $this->warnings)
+                implode(", ", $this->warnings),
+                $this->getMetrics()
             );
         }
 
@@ -111,5 +113,28 @@ class NrpeFormatter extends AbstractFormatter
                 $this->warnings[] = $record["message"];
             }
         }
+    }
+
+    /**
+     * Output Logger Metrics
+     *
+     * @return string
+     */
+    private function getMetrics(): string
+    {
+        //====================================================================//
+        // No Statistics
+        if (empty($this->counters)) {
+            $this->counters["errors"] = count($this->errors);
+            $this->counters["warnings"] = count($this->warnings);
+        }
+        //====================================================================//
+        // Outputs Statistics
+        $metrics = " | ";
+        foreach ($this->counters as $name => $counter) {
+            $metrics .= sprintf("'%s'=%s;", $name, (string) $counter);
+        }
+
+        return $metrics;
     }
 }

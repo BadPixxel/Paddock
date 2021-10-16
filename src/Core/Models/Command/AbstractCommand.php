@@ -102,6 +102,16 @@ abstract class AbstractCommand extends Command
 
             return $formatter->getStatusCode();
         }
+        //====================================================================//
+        // Outputs Statistics
+        $counters = $this->logger->getAllCounters();
+        if (!empty($counters)) {
+            $results = array();
+            foreach ($counters as $name => $counter) {
+                $results[] = $counter." ".ucfirst($name);
+            }
+            $this->logger->getLogger()->warning("Counters: ".implode(" | ", $results));
+        }
 
         return $this->logger->hasErrors() ? 1 : 0;
     }

@@ -36,6 +36,11 @@ class LogManager
     private $context;
 
     /**
+     * @var array<string, int>
+     */
+    private $counters = array();
+
+    /**
      * @var Logger
      */
     private $logger;
@@ -185,13 +190,47 @@ class LogManager
     public function getFormatter(string $formatterCode): AbstractFormatter
     {
         $records = $this->getHandler()->getRecords();
+        $counters = $this->getAllCounters();
         //====================================================================//
         // Select Formatter
         switch ($formatterCode) {
             case "nrpe":
             default:
-                return new Formatter\NrpeFormatter($records);
+                return new Formatter\NrpeFormatter($records, $counters);
         }
+    }
+
+    //====================================================================//
+    // COUNTERS MANAGEMENT
+    //====================================================================//
+
+    /**
+     * Get All Counters Values
+     *
+     * @return int[]
+     */
+    public function getAllCounters(): array
+    {
+        return $this->counters;
+    }
+
+    /**
+     * Increment Counter Value
+     *
+     * @param string $key
+     * @param int    $offest
+     *
+     * @return $this
+     */
+    public function incCounter(string $key, int $offest = 1): self
+    {
+        if (isset($this->counters[$key])) {
+            $this->counters[$key] += $offest;
+        } else {
+            $this->counters[$key] = $offest;
+        }
+
+        return $this;
     }
 
     //====================================================================//

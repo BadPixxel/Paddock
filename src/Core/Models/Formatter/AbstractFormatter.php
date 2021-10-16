@@ -26,13 +26,20 @@ abstract class AbstractFormatter implements FormatterInterface
     protected $records;
 
     /**
+     * @var array<string, int>
+     */
+    protected $counters;
+
+    /**
      * @param array $records
+     * @param array $counters
      *
      * @throws Exception
      */
-    public function __construct(array $records)
+    public function __construct(array $records, array $counters)
     {
         $this->records = $records;
+        $this->counters = $counters;
 
         $this->parse();
     }
