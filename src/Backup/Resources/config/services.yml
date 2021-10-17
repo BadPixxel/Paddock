@@ -19,6 +19,7 @@ services:
             - !tagged_iterator { tag: 'paddock.location', default_index_method: 'getCode' }
 
     BadPixxel\Paddock\Backup\Services\BackupManager:
+        public: true
         tags:
             - { name: kernel.event_listener, event: BadPixxel\Paddock\Backup\Events\GetOperationsEvent, method: onGetOperationsEvent }
 
@@ -36,6 +37,14 @@ services:
     BadPixxel\Paddock\Backup\Locations\:
         resource: '../../Locations/'
         tags:    [ paddock.location ]
+
+    ########################################################################
+    #   DATA COLLECTORS
+    ########################################################################
+
+    BadPixxel\Paddock\Backup\Collector\:
+        resource: '../../Collector/'
+        tags:    [ 'paddock.collector' ]
 
     ########################################################################
     #   PADDOCK CLI COMMANDS

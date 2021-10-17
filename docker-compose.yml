@@ -28,7 +28,7 @@ services:
         volumes:
             - symfony-var:/var/www/html/var
             - './:/var/www/html:ro'
-            - './tests/source:/var/www/source'
+            - './tests/Fixtures:/var/www/source'
             - ./docker/ssh-config:/etc/ssh:ro
         hostname:           dev.paddock.local
         networks:

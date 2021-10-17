@@ -15,9 +15,12 @@ namespace BadPixxel\Paddock\Backup\Models;
 
 use BadPixxel\Paddock\Backup\Models\Operations\AbstractOperation;
 use BadPixxel\Paddock\Backup\Services\BackupManager;
+use BadPixxel\Paddock\Core\Models\Command\AbstractCommand;
+use BadPixxel\Paddock\Core\Services\CollectorsManager;
 use BadPixxel\Paddock\Core\Services\LogManager;
+use BadPixxel\Paddock\Core\Services\TracksManager;
+use BadPixxel\Paddock\Core\Services\TracksRunner;
 use Exception;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -25,7 +28,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 /**
  * Base Command for Backup & Restore Operations
  */
-abstract class AbstractBackupCommand extends Command
+abstract class AbstractBackupCommand extends AbstractCommand
 {
     /**
      * @var BackupManager
@@ -33,22 +36,19 @@ abstract class AbstractBackupCommand extends Command
     protected $manager;
 
     /**
-     * @var LogManager
-     */
-    protected $logManager;
-
-    /**
      * Command Constructor
      *
-     * @param BackupManager $backupManager
-     * @param LogManager    $logManager
+     * @param TracksRunner      $runner
+     * @param TracksManager     $tracks
+     * @param CollectorsManager $collectors
+     * @param LogManager        $logManager
+     * @param BackupManager     $backupManager
      */
-    public function __construct(BackupManager $backupManager, LogManager $logManager)
+    public function __construct(TracksRunner $runner, TracksManager $tracks, CollectorsManager $collectors, LogManager $logManager, BackupManager $backupManager)
     {
-        parent::__construct();
+        parent::__construct($runner, $tracks, $collectors, $logManager);
 
         $this->manager = $backupManager;
-        $this->logManager = $logManager;
     }
 
     /**
@@ -91,5 +91,38 @@ abstract class AbstractBackupCommand extends Command
         $output->writeln('You have just selected: '.(string) $allOperations[$operationCode]);
 
         return $allOperations[$operationCode];
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function selectLocation(InputInterface $input, OutputInterface $output, AbstractOperation $operation): ?string
+    {
+        //====================================================================//
+        // Load List of Available Backup Locations Paths
+        $allLocationPaths = $operation->getLocations();
+        //====================================================================//
+        // A Location is Requested from Console
+        $locationPath = $input->getOption("location");
+        if (!empty($locationPath) && in_array($locationPath, $allLocationPaths, true)) {
+            return $locationPath;
+        }
+        //====================================================================//
+        // No Interactions
+        if (!empty($input->getOption("no-interaction"))) {
+            return null;
+        }
+        //====================================================================//
+        // User Question
+        $helper = $this->getHelper('question');
+        $question = new ChoiceQuestion(
+            'Please select location to use',
+            $allLocationPaths
+        );
+        $question->setErrorMessage('Location is invalid.');
+        $locationPath = $helper->ask($input, $output, $question);
+        $output->writeln('You have just selected: '.(string) $locationPath);
+
+        return $locationPath;
     }
 }

@@ -15,6 +15,7 @@ namespace BadPixxel\Paddock\Backup\Models\Locations;
 
 use BadPixxel\Paddock\Backup\Models\Operations\AbstractOperation;
 use BadPixxel\Paddock\Core\Models\LoggerAwareTrait;
+use BadPixxel\Paddock\Core\Services\TracksRunner;
 use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use TypeError;
@@ -32,6 +33,16 @@ abstract class AbstractLocation implements LocationInterface
      * @var null|string
      */
     protected $log;
+
+    /**
+     * @var TracksRunner
+     */
+    protected $tracksRunner;
+
+    public function __construct(TracksRunner $tracksRunner)
+    {
+        $this->tracksRunner = $tracksRunner;
+    }
 
     //====================================================================//
     // DEFINITION

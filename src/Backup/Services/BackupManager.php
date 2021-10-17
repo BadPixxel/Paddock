@@ -27,6 +27,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class BackupManager
 {
     /**
+     * @var BackupManager
+     */
+    private static $instance;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
@@ -81,6 +86,17 @@ class BackupManager
         $this->sourcesManager = $sourcesManager;
         $this->locationsManager = $locationsManager;
         $this->logManager = $logManager;
+        //====================================================================//
+        // Setup Static Access
+        static::$instance = $this;
+    }
+
+    /**
+     * Get Static Instance
+     */
+    public static function getInstance(): BackupManager
+    {
+        return static::$instance;
     }
 
     //====================================================================//

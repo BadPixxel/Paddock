@@ -15,7 +15,6 @@ namespace BadPixxel\Paddock\Backup\Command;
 
 use BadPixxel\Paddock\Backup\Models\AbstractBackupCommand;
 use Exception;
-use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,6 +38,7 @@ class BackupCommand extends AbstractBackupCommand
                 InputOption::VALUE_OPTIONAL,
                 'Backup Operation to Execute'
             )
+            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Response Format')
         ;
     }
 
@@ -57,8 +57,8 @@ class BackupCommand extends AbstractBackupCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         //====================================================================//
-        // Setup Console Log
-        $this->logManager->pushHandler(new ConsoleHandler($output));
+        // Init Paddock Command
+        $this->init($input, $output);
         //====================================================================//
         // Select Operation to Execute
         $operation = $this->selectOperation($input, $output);
@@ -68,10 +68,11 @@ class BackupCommand extends AbstractBackupCommand
         //====================================================================//
         // Execute Backup Operation
         $this->manager->doBackup($operation)
-            ? $this->logManager->getLogger()->info("Backup Completed")
-            : $this->logManager->getLogger()->error("Backup Failed")
+            ? $this->logger->getLogger()->info("Backup Completed")
+            : $this->logger->getLogger()->error("Backup Failed")
         ;
-
-        return 0;
+        //====================================================================//
+        // Close Paddock Command
+        return $this->close($input, $output);
     }
 }

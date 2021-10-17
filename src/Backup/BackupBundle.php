@@ -20,4 +20,13 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class BackupBundle extends Bundle
 {
+    /**
+     * Boot Paddock Backup Bundle
+     */
+    public function boot(): void
+    {
+        //==============================================================================
+        // Force Loading of Services for Static Access
+        $this->container->get(Services\BackupManager::class);
+    }
 }
