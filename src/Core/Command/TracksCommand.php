@@ -60,7 +60,7 @@ class TracksCommand extends Command
         $this
             ->setName('paddock:tracks')
             ->setDescription('Display list of Available Tracks (Rules Collection)')
-            ->addOption('all', 'a', InputOption::VALUE_OPTIONAL, 'Show all')
+            ->addOption('all', 'a', InputOption::VALUE_OPTIONAL, 'Show all', false)
         ;
     }
 
@@ -89,7 +89,7 @@ class TracksCommand extends Command
         foreach ($tracks as $code => $constraint) {
             //====================================================================//
             // Show Only Enabled Tracks
-            if (!$constraint->isEnabled() && empty($input->getOption("all"))) {
+            if (!$constraint->isEnabled() && (false === $input->getOption("all"))) {
                 continue;
             }
             $table->addRow(array(
