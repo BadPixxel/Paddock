@@ -20,6 +20,7 @@ use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -59,6 +60,7 @@ class TracksCommand extends Command
         $this
             ->setName('paddock:tracks')
             ->setDescription('Display list of Available Tracks (Rules Collection)')
+            ->addOption('all', 'a', InputOption::VALUE_OPTIONAL, 'Show all')
         ;
     }
 
@@ -85,6 +87,11 @@ class TracksCommand extends Command
         $table = new Table($output);
         $table->setHeaders(array('Code', 'Collector', 'Rules', 'Rules', 'Description'));
         foreach ($tracks as $code => $constraint) {
+            //====================================================================//
+            // Show Only Enabled Tracks
+            if (!$constraint->isEnabled() && empty($input->getOption("all"))) {
+                continue;
+            }
             $table->addRow(array(
                 $code,
                 $constraint->getCollector(),
