@@ -94,7 +94,7 @@ class CmdRunner
      */
     public static function getExitCodeText(): ?string
     {
-        return self::$process->getExitCodeText();
+        return self::$process->getErrorOutput();
     }
 
     /**
@@ -105,7 +105,7 @@ class CmdRunner
         //====================================================================//
         // Execute Shell Command
         self::$process = new Process($command);
-        self::$process->setPty(true)->run();
+        self::$process->setPty(false)->setTty(false)->run();
         //====================================================================//
         // Check Command Worked
         if (self::$process->isSuccessful()) {
@@ -113,11 +113,13 @@ class CmdRunner
         }
         //====================================================================//
         // Report Error
-        return self::getLogger()->error("Shell command fail", array(
+        self::getLogger()->error("Shell command fail", array(
             "command" => self::getCommandLine(),
             "code" => self::getExitCode(),
             "text" => self::getExitCodeText()
         ));
+
+        return false;
     }
 
     //====================================================================//

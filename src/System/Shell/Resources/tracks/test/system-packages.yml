@@ -1,6 +1,13 @@
 
 tracks:
 
+    test-system-updates:
+        collector:      "apt-updates"
+        description:    "TEST - System Packages Update Status"
+        rules:
+            all:             { empty: true, lt: "10" }
+            safety:          { empty: true, eq: "0" }
+
     test-system-packages:
         collector:      "apt-version"
         description:    "TEST - System Installed Packages"

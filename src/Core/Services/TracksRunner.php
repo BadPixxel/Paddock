@@ -93,28 +93,49 @@ class TracksRunner
             // Setup Rule Context
             $this->logger->setContext($trackCode, $ruleOptions["rule"], $ruleOptions["key"]);
             //====================================================================//
-            // Load Value from Data Collector
-            try {
-                $value = $this->collectors
-                    ->getByCode($ruleOptions["collector"])
-                    ->getData($ruleOptions["options"], $ruleOptions["key"])
-                ;
-            } catch (\Throwable $throwable) {
-                //====================================================================//
-                // If Data Collector Failed
-                $this->logger->setContext($trackCode, $ruleOptions["rule"], $ruleOptions["key"]);
-                $this->logger->log(Logger::EMERGENCY, $throwable->getMessage());
-
-                continue;
-            }
-            //====================================================================//
-            // Load Paddock Rule
-            $rule = $this->rules->getByCode($ruleOptions["rule"]);
-            //====================================================================//
             // Execute Rule Validation
-            $rule->execute($ruleOptions, $value);
+            $this->runOne($ruleOptions, $trackCode);
         }
 
         return $this->logger->hasRecordsAboveLevel($minLogLevel);
+    }
+
+    /**
+     * Execute a Single Rule Verification.
+     *
+     * @param array       $ruleOptions
+     * @param null|string $trackCode
+     *
+     * @throws Exception
+     *
+     * @return bool
+     */
+    public function runOne(array $ruleOptions, string $trackCode = null): bool
+    {
+        //====================================================================//
+        // Load Value from Data Collector
+        try {
+            $value = $this->collectors
+                ->getByCode($ruleOptions["collector"])
+                ->getData($ruleOptions["options"] ?? array(), $ruleOptions["key"])
+            ;
+        } catch (\Throwable $throwable) {
+            //====================================================================//
+            // If Data Collector Failed
+            if ($trackCode) {
+                $this->logger->setContext($trackCode, $ruleOptions["rule"], $ruleOptions["key"]);
+            }
+            $this->logger->log(Logger::EMERGENCY, $throwable->getMessage());
+
+            return false;
+        }
+        //====================================================================//
+        // Load Paddock Rule
+        $rule = $this->rules->getByCode($ruleOptions["rule"]);
+        //====================================================================//
+        // Execute Rule Validation
+        $rule->execute($ruleOptions, $value);
+
+        return true;
     }
 }
