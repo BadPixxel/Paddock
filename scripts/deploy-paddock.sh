@@ -26,7 +26,7 @@ echo "\033[32m Update from GIT Repository             \033[0m";
 if [ -f "${INSTALL_PATH}/composer.json" ]; then
   echo "Paddock is Already Installed"
   cd ${INSTALL_PATH}
-  git pull
+  git stash && git checkout -f && git pull
 else
   echo "Clone & Install Paddock from Git"
   git clone ${GIT_URL} ${INSTALL_PATH} --depth=1
