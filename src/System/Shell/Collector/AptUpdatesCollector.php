@@ -72,7 +72,7 @@ class AptUpdatesCollector extends AbstractCollector
         $resultArray = $cache->get(md5(__CLASS__), function (ItemInterface $item) {
             //====================================================================//
             // Cache Expire After 60 Seconds
-            $item->expiresAfter(2);
+            $item->expiresAfter(60);
             //====================================================================//
             // Verify Apt Binary Exists
             $binary = CmdRunner::findBinary("apt-get");
@@ -102,8 +102,14 @@ class AptUpdatesCollector extends AbstractCollector
         if (is_null($resultArray)) {
             return "";
         }
+        //====================================================================//
+        // Analyze Results
+        $allCount = $this->countInResults($resultArray, "");
+        $this->getLogger()->incCounter("available_upgrades", $allCount);
+        $safetyCount = $this->countInResults($resultArray, "safety");
+        $this->getLogger()->incCounter("critical_updates", $safetyCount);
 
-        return (string) $this->countInResults($resultArray, ("safety" == $key) ? "safety" : "");
+        return (string) (("safety" == $key) ? $safetyCount : $allCount);
     }
 
     /**
