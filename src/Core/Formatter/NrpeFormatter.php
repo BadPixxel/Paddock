@@ -81,7 +81,7 @@ class NrpeFormatter extends AbstractFormatter
             );
         }
 
-        return "All OK !!";
+        return "All OK !!".$this->getMetrics();
     }
 
     /**
