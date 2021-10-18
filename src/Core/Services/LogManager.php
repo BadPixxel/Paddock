@@ -233,6 +233,20 @@ class LogManager
         return $this;
     }
 
+    /**
+     * Reset Counter Value
+     *
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function resetCounter(string $key): self
+    {
+        $this->counters[$key] = 0;
+
+        return $this;
+    }
+
     //====================================================================//
     // BASIC GETTERS
     //====================================================================//
