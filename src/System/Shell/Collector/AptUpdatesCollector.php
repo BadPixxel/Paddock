@@ -75,20 +75,23 @@ class AptUpdatesCollector extends AbstractCollector
             $item->expiresAfter(2);
             //====================================================================//
             // Verify Apt Binary Exists
-            $binary = CmdRunner::findBinary("apt");
+            $binary = CmdRunner::findBinary("apt-get");
             if (empty($binary)) {
                 $this->error("Is package installed?");
 
                 return null;
             }
             //====================================================================//
-            // Run Apt Update Command
-            if (!CmdRunner::run(array($binary, 'update'))) {
-                return null;
-            }
-            //====================================================================//
-            // Run Apt List Command
-            if (!CmdRunner::run(array($binary, 'list', '--upgradable'))) {
+            // Run Apt Upgrade Command
+            $command = array(
+                $binary,
+                'upgrade',
+                '-u',
+                '-o', 'Debug::NoLocking=true',
+                '-o', 'APT::Get::Simulate=true',
+                '-qq',
+            );
+            if (!CmdRunner::run($command)) {
                 return null;
             }
             //====================================================================//
@@ -119,7 +122,7 @@ class AptUpdatesCollector extends AbstractCollector
         foreach ($results as $result) {
             //====================================================================//
             // This is NOT a Package Line
-            if (false === strpos($result, "/")) {
+            if (0 !== strpos($result, "Inst")) {
                 continue;
             }
             //====================================================================//
