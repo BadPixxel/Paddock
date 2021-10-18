@@ -5,8 +5,8 @@ tracks:
         collector:      "apt-updates"
         description:    "TEST - System Packages Update Status"
         rules:
-            all:             { empty: true, lt: "10" }
-            safety:          { empty: true, eq: "0" }
+            all:                { empty: true, lt: "10" }
+            safety:             { empty: true, eq: "0" }
 
     test-system-packages:
         collector:      "apt-version"
@@ -14,5 +14,12 @@ tracks:
         overrides:
             rule: version
         rules:
-            curl:             { ne: true, gt: "7.50" }
-            apache2:          { ne: true, gt: { error: "2.4.0" } }
+            curl:               { ne: true, gt: "7.50" }
+            apache2:            { ne: true, gt: { error: "2.4.0" } }
+
+    test-system-services:
+        collector:      "service"
+        description:    "TEST - System Services Actives"
+        enabled:        false
+        rules:
+            apache2:            { ne: true }
