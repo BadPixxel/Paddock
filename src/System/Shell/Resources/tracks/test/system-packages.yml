@@ -6,7 +6,7 @@ tracks:
         description:    "TEST - System Packages Update Status"
         rules:
             all:                { empty: true, lt: "10" }
-            safety:             { empty: true, eq: "0" }
+            security:           { empty: true, eq: "0" }
 
     test-system-packages:
         collector:      "apt-version"

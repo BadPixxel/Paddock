@@ -62,7 +62,7 @@ class AptUpdatesCollector extends AbstractCollector
     {
         //====================================================================//
         // Verify Request Key
-        if (!in_array($key, array("all", "safety"), true)) {
+        if (!in_array($key, array("all", "security"), true)) {
             return (string) $this->error("Key MUST one of 'all' or 'safety'.");
         }
         //====================================================================//
@@ -106,10 +106,10 @@ class AptUpdatesCollector extends AbstractCollector
         // Analyze Results
         $allCount = $this->countInResults($resultArray, "");
         $this->getLogger()->resetCounter("available_upgrades")->incCounter("available_upgrades", $allCount);
-        $safetyCount = $this->countInResults($resultArray, "safety");
+        $safetyCount = $this->countInResults($resultArray, "security");
         $this->getLogger()->resetCounter("critical_updates")->incCounter("critical_updates", $safetyCount);
 
-        return (string) (("safety" == $key) ? $safetyCount : $allCount);
+        return (string) (("security" == $key) ? $safetyCount : $allCount);
     }
 
     /**
