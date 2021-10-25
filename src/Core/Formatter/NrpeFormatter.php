@@ -156,7 +156,7 @@ class NrpeFormatter extends AbstractFormatter
         }
         //====================================================================//
         // Build Nagios/NRPE Metric Options
-        $options = ($this->options[$name]['uom'] ?? "").";";
+        $options = str_replace("P", "%", $this->options[$name]['uom'] ?? "").";";
         $options .= ($this->options[$name]['warn'] ?? "").";";
         $options .= ($this->options[$name]['crit'] ?? "").";";
         $options .= ($this->options[$name]['min'] ?? "").";";
