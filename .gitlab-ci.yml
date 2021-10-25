@@ -80,10 +80,6 @@ docker:
     # Build & Upload Docker Image
     - docker build -t registry.gitlab.com/badpixxel-projects/paddock:latest docker/paddock
     - docker push registry.gitlab.com/badpixxel-projects/paddock:latest
-  only:
-    changes:
-      - docker/**/*
-      - .gitlab-ci.yml
 
 #################################################################
 ## Build Documentation
