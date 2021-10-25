@@ -65,7 +65,7 @@ class StatisticsCollector extends AbstractMongoDbCollector
         try {
             $results = $connexion->selectDatabase("${dbName}")->command(array(
                 "dbStats" => 1,
-                "scale" => 1024,
+                "scale" => 1,
             ))->toArray();
         } catch (\Exception $ex) {
             $this->error(sprintf("No Statistics for Db: %s", $dbName));
