@@ -78,6 +78,14 @@ class StatisticsCollector extends AbstractMongoDbCollector
             //====================================================================//
             // Free Space on Disk
             $results[0]['fsFreeSize'] = ($results[0]['fsTotalSize'] ?? 0) - ($results[0]['fsUsedSize'] ?? 0);
+            //====================================================================//
+            // Free & Used Space on Disk as Percent
+            $results[0]['fsUsedSizePercent'] = 0;
+            $results[0]['fsFreeSizePercent'] = 0;
+            if (($results[0]['fsTotalSize'] ?? 0) > 1) {
+                $results[0]['fsUsedSizePercent'] = 100 * $results[0]['fsUsedSize'] / $results[0]['fsTotalSize'];
+                $results[0]['fsFreeSizePercent'] = 100 * $results[0]['fsFreeSize'] / $results[0]['fsTotalSize'];
+            }
         }
         //====================================================================//
         // Extract value from Results
