@@ -5,8 +5,8 @@ tracks:
         collector:      "apt-updates"
         description:    "TEST - System Packages Update Status"
         rules:
-            all:                { empty: true, lt: "10" }
-            security:           { empty: true, eq: "0" }
+            all:                { lt: "10", metric: "available_upgrades" }
+            security:           { eq: "0", metric: "critical_updates" }
 
     test-system-packages:
         collector:      "apt-version"
