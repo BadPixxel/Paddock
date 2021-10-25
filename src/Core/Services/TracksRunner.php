@@ -133,13 +133,13 @@ class TracksRunner
         // Load Paddock Rule
         $rule = $this->rules->getByCode($ruleOptions["rule"]);
         //====================================================================//
-        // Execute Rule Validation
-        $rule->execute($ruleOptions, $value);
-        //====================================================================//
         // Add Result to Logs
         if (is_scalar($value) && !empty($rule->getMetricName())) {
             $this->logger->incCounter($rule->getMetricName(), (int) $value);
         }
+        //====================================================================//
+        // Execute Rule Validation
+        $rule->execute($ruleOptions, $value);
 
         return true;
     }
