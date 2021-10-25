@@ -26,9 +26,15 @@ subtitle:       DOC
 # the sub-path of your site, e.g. /blog
 baseurl:        "/paddock"
 # Description of the Bundle/Module
-description:    "Welcome to the Paddock Documentation
-
-                To be completed!"
+description:    "
+Welcome to the Paddock Documentation. Paddock is a pragmatical toolbox for webservers management.
+<br/><br/>
+It work as a complement for Nagios Plugins, in order to add complementary / intelligent/ advanced checks for monitoring webservers
+through Nagios or Centreon platform.
+<br/><br/>
+The Key feature of Paddock is it's design, especially done for monitoring pools of webservers using a centralized and structured configurations.
+Deployment & updates may be automated via modern CI/CD systems in order to ensure servers homogeneity.
+"
 # Package Code on Packagist
 package:        "badpixxel/paddock"
 

@@ -28,6 +28,7 @@ parameters:
     # For Building Splash Documentation
     doc-src:            '/src/Docs'
     doc-target:         '/public'
+    doc-contents:       [ 'badpixxel-theme', 'php-composer', 'php-docker' ]
 
     # For Building Splash Module
     mod-enable:         false

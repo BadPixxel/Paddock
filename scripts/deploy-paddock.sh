@@ -31,6 +31,7 @@ else
   echo "Clone & Install Paddock from Git"
   git clone ${GIT_URL} ${INSTALL_PATH} --depth=1
 fi
+cd ${INSTALL_PATH}
 
 ################################################################
 # Run Composer Install
