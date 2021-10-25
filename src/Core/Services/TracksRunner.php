@@ -138,7 +138,7 @@ class TracksRunner
         //====================================================================//
         // Add Result to Logs
         if (is_scalar($value) && !empty($rule->getMetricName())) {
-            $this->logger->incCounter($rule->getMetricName(), (int) $value);
+            $this->logger->incCounter($rule->getMetricName(), (int) $value, $rule->getMetricOptions());
         }
 
         return true;

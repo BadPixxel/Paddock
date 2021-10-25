@@ -115,6 +115,8 @@ abstract class AbstractRule implements RuleInterface
         // Log Results to Metrics Counters
         $resolver->setDefault("metric", null);
         $resolver->setAllowedTypes("metric", array("null", "string"));
+        $resolver->setDefault("metric-options", array());
+        $resolver->setAllowedTypes("metric-options", array("array"));
     }
 
     //====================================================================//
@@ -210,6 +212,14 @@ abstract class AbstractRule implements RuleInterface
     final public function getMetricName(): ?string
     {
         return $this->options['metric'] ?: null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    final public function getMetricOptions(): array
+    {
+        return $this->options['metric-options'];
     }
 
     /**

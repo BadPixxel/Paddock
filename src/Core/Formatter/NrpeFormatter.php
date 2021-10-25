@@ -132,9 +132,36 @@ class NrpeFormatter extends AbstractFormatter
         // Outputs Statistics
         $metrics = " | ";
         foreach ($this->counters as $name => $counter) {
-            $metrics .= sprintf("'%s'=%s;", $name, (string) $counter);
+            //====================================================================//
+            // Outputs Statistics
+            $metrics .= sprintf("'%s'=%s%s", $name, (string) $counter, $this->getMetricOptions($name));
         }
 
         return $metrics;
+    }
+
+    /**
+     * Output Logger Metrics Options
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    private function getMetricOptions(string $name): string
+    {
+        //====================================================================//
+        // Safety Check
+        if (!is_array($this->options[$name]) || !is_array($this->options[$name])) {
+            return ";";
+        }
+        //====================================================================//
+        // Build Nagios/NRPE Metric Options
+        $options = ($this->options[$name]['uom'] ?? "").";";
+        $options .= ($this->options[$name]['warn'] ?? "").";";
+        $options .= ($this->options[$name]['crit'] ?? "").";";
+        $options .= ($this->options[$name]['min'] ?? "").";";
+        $options .= ($this->options[$name]['max'] ?? "");
+
+        return $options;
     }
 }

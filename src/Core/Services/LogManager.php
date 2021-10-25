@@ -41,6 +41,11 @@ class LogManager
     private $counters = array();
 
     /**
+     * @var array<string, array>
+     */
+    private $countersOptions = array();
+
+    /**
      * @var Logger
      */
     private $logger;
@@ -191,12 +196,13 @@ class LogManager
     {
         $records = $this->getHandler()->getRecords();
         $counters = $this->getAllCounters();
+        $options = $this->getAllCountersOptions();
         //====================================================================//
         // Select Formatter
         switch ($formatterCode) {
             case "nrpe":
             default:
-                return new Formatter\NrpeFormatter($records, $counters);
+                return new Formatter\NrpeFormatter($records, $counters, $options);
         }
     }
 
@@ -207,7 +213,7 @@ class LogManager
     /**
      * Get All Counters Values
      *
-     * @return int[]
+     * @return array<string, int>
      */
     public function getAllCounters(): array
     {
@@ -215,19 +221,34 @@ class LogManager
     }
 
     /**
+     * Get All Counters Options
+     *
+     * @return array<string, array>
+     */
+    public function getAllCountersOptions(): array
+    {
+        return $this->countersOptions;
+    }
+
+    /**
      * Increment Counter Value
      *
      * @param string $key
      * @param int    $offest
+     * @param array  $options
      *
      * @return $this
      */
-    public function incCounter(string $key, int $offest = 1): self
+    public function incCounter(string $key, int $offest = 1, array $options = array()): self
     {
         if (isset($this->counters[$key])) {
             $this->counters[$key] += $offest;
         } else {
             $this->counters[$key] = $offest;
+        }
+
+        if (!isset($this->countersOptions[$key])) {
+            $this->countersOptions[$key] = $options;
         }
 
         return $this;

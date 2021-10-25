@@ -31,15 +31,22 @@ abstract class AbstractFormatter implements FormatterInterface
     protected $counters;
 
     /**
+     * @var array<string, array>
+     */
+    protected $options;
+
+    /**
      * @param array $records
      * @param array $counters
+     * @param array $options
      *
      * @throws Exception
      */
-    public function __construct(array $records, array $counters)
+    public function __construct(array $records, array $counters, array $options = array())
     {
         $this->records = $records;
         $this->counters = $counters;
+        $this->options = $options;
 
         $this->parse();
     }

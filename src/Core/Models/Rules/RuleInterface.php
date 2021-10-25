@@ -100,4 +100,11 @@ interface RuleInterface
      * @return null|string
      */
     public function getMetricName(): ?string;
+
+    /**
+     * Get Options of Metric for this Value
+     *
+     * @return array
+     */
+    public function getMetricOptions(): array;
 }
