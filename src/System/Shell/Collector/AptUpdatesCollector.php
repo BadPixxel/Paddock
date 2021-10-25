@@ -105,9 +105,7 @@ class AptUpdatesCollector extends AbstractCollector
         //====================================================================//
         // Analyze Results
         $allCount = $this->countInResults($resultArray, "");
-        $this->getLogger()->resetCounter("available_upgrades")->incCounter("available_upgrades", $allCount);
         $safetyCount = $this->countInResults($resultArray, "security");
-        $this->getLogger()->resetCounter("critical_updates")->incCounter("critical_updates", $safetyCount);
 
         return (string) (("security" == $key) ? $safetyCount : $allCount);
     }

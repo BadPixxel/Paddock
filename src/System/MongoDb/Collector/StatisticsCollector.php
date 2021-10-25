@@ -73,6 +73,13 @@ class StatisticsCollector extends AbstractMongoDbCollector
             return ' ';
         }
         //====================================================================//
+        // Add Extra values to Results
+        if (isset($results[0]) && is_array($results[0])) {
+            //====================================================================//
+            // Free Space on Disk
+            $results[0]['fsFreeSize'] = ($results[0]['fsTotalSize'] ?? 0) - ($results[0]['fsUsedSize'] ?? 0);
+        }
+        //====================================================================//
         // Extract value from Results
         if (!is_array($results) || empty($results[0]["ok"]) || !isset($results[0][$key])) {
             $this->error(sprintf("No Statistics with key %s on Db: %s", $key, $dbName));

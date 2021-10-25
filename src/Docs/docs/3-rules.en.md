@@ -65,6 +65,22 @@ In this case, if value is below 1 000, an error will be triggered.
 If value is just below 10 000, a warning will be reported.
 But if value is just below 35 000, no error or warning will be reported, just an info message when Paddock runs on console.
 
+### Metrics
+It's possible to collect counter values that will be returned as metrics on NRPE.
+
+Just add counter name on metric tag. 
+```yaml
+tracks:
+  test-mongo-config:
+    collector:      "mongo-stats"
+    rules:
+      # Remaining disk free space is above 1G
+      fsFreeSize:               { gte: "1G", metric: "mongo_free_space" }
+```
+
+Note: if multiple rules uses the same metric code, values will be merged.
+
+
 ### Advanced rules configurations
 It's possible to mix all this to create fully customized rules.
 

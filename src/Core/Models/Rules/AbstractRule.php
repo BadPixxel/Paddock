@@ -32,7 +32,7 @@ abstract class AbstractRule implements RuleInterface
      *
      * @var array
      */
-    const CORE_OPTIONS = array("rule", "enabled", "description", "collector", "options", "key");
+    const CORE_OPTIONS = array("rule", "enabled", "description", "collector", "options", "key", "metric");
 
     /**
      * @var array
@@ -111,6 +111,10 @@ abstract class AbstractRule implements RuleInterface
         // Key
         $resolver->setDefault("key", null);
         $resolver->setAllowedTypes("key", array("string"));
+        //====================================================================//
+        // Log Results to Metrics Counters
+        $resolver->setDefault("metric", null);
+        $resolver->setAllowedTypes("metric", array("null", "string"));
     }
 
     //====================================================================//
@@ -198,6 +202,14 @@ abstract class AbstractRule implements RuleInterface
         }
 
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    final public function getMetricName(): ?string
+    {
+        return $this->options['metric'] ?: null;
     }
 
     /**

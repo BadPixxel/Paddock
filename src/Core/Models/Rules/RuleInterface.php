@@ -93,4 +93,11 @@ interface RuleInterface
      * @return bool
      */
     public function validateOptions(array $options): bool;
+
+    /**
+     * Get Name of Metric for this Value
+     *
+     * @return null|string
+     */
+    public function getMetricName(): ?string;
 }
