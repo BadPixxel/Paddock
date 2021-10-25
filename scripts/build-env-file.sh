@@ -27,5 +27,5 @@ php -r "file_put_contents('./build/.env', str_replace('%PADDOCK_BACKUP%', '${PAD
 if [ -z "${DATABASE_URL}" ]; then DATABASE_URL="mysql://root:@localhost:3306"; echo " => No MySql Database Url Defined"; fi
 php -r "file_put_contents('./build/.env', str_replace('%DATABASE_URL%', '${DATABASE_URL}', file_get_contents('./build/.env')));"
 # Setup Default Mongodb Url
-if [ -z "${MONGODB_URL}" ]; then MONGODB_URL="mongodb://localhost:27017"; echo " => No Mongodb Database Url Defined";  fi
+if [ -z "${MONGODB_URL}" ]; then MONGODB_URL="mongodb://localhost:27017/config"; echo " => No Mongodb Database Url Defined";  fi
 php -r "file_put_contents('./build/.env', str_replace('%MONGODB_URL%', '${MONGODB_URL}', file_get_contents('./build/.env')));"
