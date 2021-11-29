@@ -64,4 +64,4 @@ echo "\033[32m Paddock Available Backups             \033[0m";
 php bin/console paddock:backup:status
 
 echo "\033[32m Paddock Status             \033[0m";
-php bin/console paddock:run -f=nrpe -n --no-debug
+php bin/console paddock:run -n --no-debug
