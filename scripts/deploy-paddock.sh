@@ -37,7 +37,7 @@ cd ${INSTALL_PATH}
 # Run Composer Install
 ################################################################
 echo "\033[32m Composer Install                       \033[0m";
-composer install -q
+composer update
 
 ################################################################
 # Setup Paddock
