@@ -34,17 +34,22 @@ fi
 cd ${INSTALL_PATH}
 
 ################################################################
-# Run Composer Install
-################################################################
-echo "\033[32m Composer Install                       \033[0m";
-composer update
-
-################################################################
 # Setup Paddock
 ################################################################
 echo "\033[32m Paddock Setup                         \033[0m";
 cp /tmp/.env ${INSTALL_PATH}/.env;
 cp /tmp/paddock.yml ${INSTALL_PATH}/paddock.yml;
+
+################################################################
+# Run Composer Install
+################################################################
+echo "\033[32m Composer Update                       \033[0m";
+composer update
+
+################################################################
+# Setup Paddock
+################################################################
+echo "\033[32m NRPE Setup                         \033[0m";
 php bin/console paddock:nrpe:deploy
 /etc/init.d/nagios-nrpe-server restart
 
