@@ -6,11 +6,12 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php":          "^7.2",
+        "php":          "^7.3|^8.0",
         "ext-ctype":    "*",
         "ext-iconv":    "*",
         "ext-json":     "*",
         "ext-zip":      "*",
+
         "composer/package-versions-deprecated":     "1.11.99.4",
 
         "doctrine/doctrine-bundle":                 "^2.4",
