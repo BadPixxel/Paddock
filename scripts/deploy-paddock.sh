@@ -43,6 +43,7 @@ cd ${INSTALL_PATH}
 echo "\033[32m Paddock Setup                         \033[0m";
 cp /tmp/.env ${INSTALL_PATH}/.env;
 cp /tmp/paddock.yml ${INSTALL_PATH}/paddock.yml;
+rm -Rf var/cache/
 
 ################################################################
 # Run Composer Install
