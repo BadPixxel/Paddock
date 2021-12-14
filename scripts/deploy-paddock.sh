@@ -20,6 +20,10 @@ INSTALL_PATH="/usr/local/lib/paddock";
 GIT_URL="https://github.com/BadPixxel/Paddock.git";
 
 ################################################################
+# Force Failure if ONE line Fails
+set -e
+
+################################################################
 # Clone or Pull from Github
 ################################################################
 echo "\033[32m Update from GIT Repository             \033[0m";
