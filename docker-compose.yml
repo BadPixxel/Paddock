@@ -23,7 +23,7 @@ services:
     ################################################################################
     # Application Container
     app:
-        image: 'registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4'
+        image: 'registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0'
         container_name: dev.paddock.local
         volumes:
             - symfony-var:/var/www/html/var
