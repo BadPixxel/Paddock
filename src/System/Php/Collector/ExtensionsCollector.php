@@ -75,9 +75,6 @@ class ExtensionsCollector extends AbstractPhpCollector
         //====================================================================//
         // Get Ini Value from Shell
         $value = shell_exec($binary.' -r "echo phpversion(\''.$key.'\');"');
-        if (null === $value) {
-            $this->error(sprintf("Extension %s not found!", $key));
-        }
 
         return (string) $value;
     }
