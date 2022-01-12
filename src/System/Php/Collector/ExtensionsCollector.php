@@ -56,9 +56,6 @@ class ExtensionsCollector extends AbstractPhpCollector
         //====================================================================//
         // Get Extension Version from Current Php Session
         $value = phpversion($key);
-        if (false === $value) {
-            $this->error(sprintf("Extension %s not found!", $key));
-        }
 
         return (string) $value;
     }
