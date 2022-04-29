@@ -95,10 +95,10 @@ function check_vm_backups() {
         let "BACKUP_SIZE_MB=$BACKUP_SIZE / 1024 / 1024"
         if [[ $MAX_OLD_DATE -ge $BACKUP_DATE_STAMP ]]; then
             let "BACKUP_SIZE_MB=$BACKUP_SIZE / 1024 / 1024"
-            echo "> [$@][$BACKUP_TYPE] Critical - $BACKUP_COUNT total backups of vm $@. Last from $BACKUP_DATE ($BACKUP_SIZE_MB MB)."
+            echo "> [$@][$BACKUP_TYPE] Critical - $BACKUP_COUNT backups. Last from $BACKUP_DATE ($BACKUP_SIZE_MB MB)."
             exit 2
         else
-            echo "> [$@][$BACKUP_TYPE] OK - $BACKUP_COUNT total backups of vm $@. Last from $BACKUP_DATE ($BACKUP_SIZE_MB MB)."
+            echo "> [$@][$BACKUP_TYPE] OK - $BACKUP_COUNT backups. Last from $BACKUP_DATE ($BACKUP_SIZE_MB MB)."
         fi
 }
 
