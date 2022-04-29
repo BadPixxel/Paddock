@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -103,14 +103,7 @@ abstract class AbstractSource implements SourceInterface
         // Resolve Constraint Configuration
         try {
             $this->resolveOptions($options);
-        } catch (Exception $ex) {
-            $this->emergency(
-                sprintf("Invalid Backup Source Options: %s", $ex->getMessage()),
-                array(get_class($this))
-            );
-
-            return false;
-        } catch (TypeError $ex) {
+        } catch (Exception|TypeError $ex) {
             $this->emergency(
                 sprintf("Invalid Backup Source Options: %s", $ex->getMessage()),
                 array(get_class($this))

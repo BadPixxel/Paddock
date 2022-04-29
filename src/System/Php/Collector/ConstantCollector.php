@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -63,8 +63,9 @@ class ConstantCollector extends AbstractPhpCollector
 
             return "";
         }
+        $value = constant($key);
 
-        return constant($key);
+        return is_scalar($value) ? (string) $value : "";
     }
 
     //====================================================================//

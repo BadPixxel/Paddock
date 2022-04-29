@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,7 +14,6 @@
 namespace BadPixxel\Paddock\Apps\Nrpe\Command;
 
 use BadPixxel\Paddock\Apps\Nrpe\Services\CommandsManager;
-use BadPixxel\Paddock\Core\Services\ConfigurationManager;
 use BadPixxel\Paddock\Core\Services\LogManager;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Component\Console\Command\Command;
@@ -29,25 +28,20 @@ class DeployCommand extends Command
     /** @var CommandsManager */
     private $commands;
 
-    /** @var ConfigurationManager */
-    private $config;
-
     /** @var LogManager */
     private $logger;
 
     /**
      * Command Constructor
      *
-     * @param CommandsManager      $commands
-     * @param ConfigurationManager $config
-     * @param LogManager           $logger
+     * @param CommandsManager $commands
+     * @param LogManager      $logger
      */
-    public function __construct(CommandsManager $commands, ConfigurationManager $config, LogManager $logger)
+    public function __construct(CommandsManager $commands, LogManager $logger)
     {
         parent::__construct();
 
         $this->commands = $commands;
-        $this->config = $config;
         $this->logger = $logger;
     }
 

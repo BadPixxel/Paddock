@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,7 +29,7 @@ class JsonFormatter extends BaseFormatter
     {
         $normalized = parent::normalize($data, $depth);
 
-        if (1 == $depth) {
+        if ((1 == $depth) && is_array($normalized)) {
             unset($normalized["datetime"], $normalized["level"], $normalized["level_name"], $normalized["channel"], $normalized["extra"], $normalized["formatted"]);
         }
 

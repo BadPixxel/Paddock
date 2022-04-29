@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -71,7 +71,7 @@ class LogManager
         $this->logger->pushHandler($this->logHandler);
         //====================================================================//
         // Setup Static Access
-        static::$instance = $this;
+        self::$instance = $this;
     }
 
     //====================================================================//
@@ -277,7 +277,7 @@ class LogManager
      */
     public static function getInstance(): LogManager
     {
-        return static::$instance;
+        return self::$instance;
     }
 
     /**

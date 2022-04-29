@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -38,7 +38,7 @@ interface RuleInterface
     /**
      * Describe Rule Configuration.
      *
-     * Use this function to details what will be checked with this given config.
+     * Use this function to detail what will be checked with this given config.
      *
      * @param array $options
      *

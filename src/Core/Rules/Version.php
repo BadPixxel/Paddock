@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -72,6 +72,7 @@ class Version extends AbstractRule
         if (!$this->forward(isScalar::getCode(), $value)) {
             return false;
         }
+        /** @var scalar $value */
         //====================================================================//
         // Empty Value Required
         if (!$this->forward(isEmpty::getCode(), $value)) {

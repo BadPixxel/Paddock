@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -78,7 +78,7 @@ abstract class AbstractTrack
      *
      * @var string
      */
-    private $rule;
+    private $rule = "value";
 
     /**
      * Rules / Constraints Collection
@@ -235,9 +235,7 @@ abstract class AbstractTrack
         // Resolve Options
         try {
             return $resolver->resolve($options);
-        } catch (Exception $ex) {
-            $logger->log(Logger::EMERGENCY, sprintf("Invalid Rules Options: %s", $ex->getMessage()));
-        } catch (TypeError $ex) {
+        } catch (Exception|TypeError $ex) {
             $logger->log(Logger::EMERGENCY, sprintf("Invalid Rules Options: %s", $ex->getMessage()));
         }
 
@@ -305,6 +303,7 @@ abstract class AbstractTrack
      */
     public function getRules(): array
     {
+        /** @phpstan-ignore-next-line */
         return $this->rules->toArray();
     }
 
@@ -315,6 +314,7 @@ abstract class AbstractTrack
      */
     public function getChildren(): array
     {
+        /** @phpstan-ignore-next-line */
         return $this->children->toArray();
     }
 

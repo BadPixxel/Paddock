@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -75,7 +75,6 @@ abstract class AbstractMongoDbCollector extends AbstractCollector implements Mon
      */
     public function get(string $key): string
     {
-        $connexion = null;
         //====================================================================//
         // Verify Value on External Connexion
         if (!empty($this->config["url"])) {
@@ -85,7 +84,7 @@ abstract class AbstractMongoDbCollector extends AbstractCollector implements Mon
         }
         //====================================================================//
         // Verify Value on Local Connexion
-        if (empty($connexion) && !empty($this->config["connexion"])) {
+        if (!empty($this->config["connexion"])) {
             $connexion = $this->getLocalConnexion($this->config["connexion"]);
 
             return $connexion ? $this->getValue($connexion, $key) : '';

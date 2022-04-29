@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,7 +39,7 @@ class RulesManager
     private $logManager;
 
     /**
-     * @var AbstractRule[]
+     * @var null|AbstractRule[]
      */
     private $constraints;
 
@@ -59,7 +59,7 @@ class RulesManager
         $this->logManager = $logManager;
         //====================================================================//
         // Setup Static Access
-        static::$instance = $this;
+        self::$instance = $this;
     }
 
     //====================================================================//
@@ -109,7 +109,7 @@ class RulesManager
     {
         $this->loadRules();
 
-        return $this->constraints;
+        return $this->constraints ?? array();
     }
 
     /**
@@ -117,7 +117,7 @@ class RulesManager
      */
     public static function getInstance(): RulesManager
     {
-        return static::$instance;
+        return self::$instance;
     }
 
     /**

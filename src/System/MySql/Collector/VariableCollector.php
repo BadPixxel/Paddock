@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -58,13 +58,14 @@ class VariableCollector extends AbstractMySqlCollector
         $result = $connexion->prepare("SELECT ".$key.";")->executeQuery();
         //====================================================================//
         // Extract value from Results
-        $result = $result->fetchAssociative();
-        if (!$result || !isset($result[$key])) {
+        /** @var null|scalar[] $results */
+        $results = $result->fetchAssociative();
+        if (!$results || !isset($results[$key])) {
             $this->error(sprintf("MySql key %s doesn't exists!", $key));
 
             return '';
         }
 
-        return (string) $result[$key];
+        return (string) $results[$key];
     }
 }

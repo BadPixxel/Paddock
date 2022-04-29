@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,7 +14,6 @@
 namespace BadPixxel\Paddock\Backup\Services;
 
 use BadPixxel\Paddock\Backup\Models\Sources\AbstractSource;
-use BadPixxel\Paddock\Core\Services\LogManager;
 use Exception;
 
 /**
@@ -22,11 +21,6 @@ use Exception;
  */
 class SourcesManager
 {
-    /**
-     * @var LogManager
-     */
-    private $logManager;
-
     /**
      * @var AbstractSource[]
      */
@@ -39,14 +33,12 @@ class SourcesManager
     /**
      * Service Constructor
      *
-     * @param iterable   $sources
-     * @param LogManager $logManager
+     * @param iterable $sources
      *
      * @throws Exception
      */
-    public function __construct(iterable $sources, LogManager $logManager)
+    public function __construct(iterable $sources)
     {
-        $this->logManager = $logManager;
         //====================================================================//
         // Load Sources
         $this->loadSources($sources);

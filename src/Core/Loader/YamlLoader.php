@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,6 +39,7 @@ class YamlLoader
         }
         //====================================================================//
         // Parse Yaml Contents
+        /** @var array<string, mixed> $file */
         $file = Yaml::parse($fileContents, 0);
         //====================================================================//
         // Check if Has Imports

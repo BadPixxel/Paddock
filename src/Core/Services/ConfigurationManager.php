@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,17 +30,12 @@ class ConfigurationManager
     const CACHE_KEY = "paddock_config";
 
     /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
      * @var FilesystemAdapter
      */
     private $cache;
 
     /**
-     * @var array
+     * @var null|array
      */
     private $config;
 
@@ -51,7 +46,6 @@ class ConfigurationManager
      */
     public function __construct(string $projectDir)
     {
-        $this->projectDir = $projectDir;
         //====================================================================//
         // Init cache
         $this->cache = new FilesystemAdapter();
@@ -108,11 +102,14 @@ class ConfigurationManager
         // Load Config with Cache Management
         if (self::isCacheEnabled()) {
             // The callable will only be executed on a cache miss.
-            return $this->config = $this->cache->get(self::CACHE_KEY, function (ItemInterface $item) {
+            /** @var array $configCache */
+            $configCache = $this->cache->get(self::CACHE_KEY, function (ItemInterface $item) {
                 $item->expiresAfter(3660);
 
                 return $this->loadFromPath();
             });
+
+            return $this->config = $configCache;
         }
         //====================================================================//
         // Empty the cache

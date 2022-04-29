@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,23 +15,12 @@ namespace BadPixxel\Paddock\Core\Services;
 
 use BadPixxel\Paddock\Core\Collector\AbstractCollector;
 use Exception;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Manager for Paddock Data Collectors
  */
 class CollectorsManager
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
-     * @var LogManager
-     */
-    private $logManager;
-
     /**
      * @var AbstractCollector[]
      */
@@ -44,16 +33,12 @@ class CollectorsManager
     /**
      * Service Constructor
      *
-     * @param iterable                 $collectors
-     * @param EventDispatcherInterface $dispatcher
-     * @param LogManager               $logManager
+     * @param iterable $collectors
      *
      * @throws Exception
      */
-    public function __construct(iterable $collectors, EventDispatcherInterface $dispatcher, LogManager $logManager)
+    public function __construct(iterable $collectors)
     {
-        $this->dispatcher = $dispatcher;
-        $this->logManager = $logManager;
         //====================================================================//
         // Load Collectors
         $this->loadCollectors($collectors);

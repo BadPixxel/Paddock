@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,11 +20,6 @@ use Exception;
 class TracksManager
 {
     /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
      * @var ConfigurationManager
      */
     private $configuration;
@@ -38,25 +33,23 @@ class TracksManager
     private $logManager;
 
     /**
-     * @var Track[]
+     * @var null|Track[]
      */
     private $tracks;
 
     /**
      * Service Constructor
      *
-     * @param string               $projectDir
      * @param ConfigurationManager $configuration
      * @param LogManager           $logManager
      */
-    public function __construct(string $projectDir, ConfigurationManager $configuration, LogManager $logManager)
+    public function __construct(ConfigurationManager $configuration, LogManager $logManager)
     {
-        $this->projectDir = $projectDir;
         $this->configuration = $configuration;
         $this->logManager = $logManager;
         //====================================================================//
         // Setup Static Access
-        static::$instance = $this;
+        self::$instance = $this;
     }
 
     /**
@@ -90,7 +83,7 @@ class TracksManager
     {
         $this->loadTracks();
 
-        return $this->tracks;
+        return $this->tracks ?? array();
     }
 
     /**
@@ -98,7 +91,7 @@ class TracksManager
      */
     public static function getInstance(): TracksManager
     {
-        return static::$instance;
+        return self::$instance;
     }
 
     /**

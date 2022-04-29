@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,6 +21,7 @@ use BadPixxel\Paddock\Core\Services\LogManager;
 use BadPixxel\Paddock\Core\Services\TracksManager;
 use BadPixxel\Paddock\Core\Services\TracksRunner;
 use Exception;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -81,6 +82,7 @@ abstract class AbstractBackupCommand extends AbstractCommand
         }
         //====================================================================//
         // User Question
+        /** @var  QuestionHelper $helper  */
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
             'Please select operation to execute',
@@ -114,15 +116,17 @@ abstract class AbstractBackupCommand extends AbstractCommand
         }
         //====================================================================//
         // User Question
+        /** @var  QuestionHelper $helper  */
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
             'Please select location to use',
             $allLocationPaths
         );
         $question->setErrorMessage('Location is invalid.');
+        /** @var scalar $locationPath */
         $locationPath = $helper->ask($input, $output, $question);
-        $output->writeln('You have just selected: '.(string) $locationPath);
+        $output->writeln('You have just selected: '.$locationPath);
 
-        return $locationPath;
+        return (string) $locationPath;
     }
 }

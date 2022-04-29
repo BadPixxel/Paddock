@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -72,7 +72,6 @@ abstract class AbstractMySqlCollector extends AbstractCollector implements MySql
      */
     public function get(string $key): string
     {
-        $connexion = null;
         //====================================================================//
         // Verify Value on External Connexion
         if (!empty($this->config["url"])) {
@@ -82,7 +81,7 @@ abstract class AbstractMySqlCollector extends AbstractCollector implements MySql
         }
         //====================================================================//
         // Verify Value on Local Connexion
-        if (empty($connexion) && !empty($this->config["dbal"])) {
+        if (!empty($this->config["dbal"])) {
             $connexion = $this->getLocalConnexion($this->config["dbal"]);
 
             return $connexion ? $this->getValue($connexion, $key) : '';

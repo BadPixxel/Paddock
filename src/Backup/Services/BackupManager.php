@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright (C) 2021 BadPixxel <www.badpixxel.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -57,7 +57,7 @@ class BackupManager
     private $logManager;
 
     /**
-     * @var array<string, AbstractOperation>
+     * @var null|array<string, AbstractOperation>
      */
     private $operations;
 
@@ -88,7 +88,7 @@ class BackupManager
         $this->logManager = $logManager;
         //====================================================================//
         // Setup Static Access
-        static::$instance = $this;
+        self::$instance = $this;
     }
 
     /**
@@ -96,7 +96,7 @@ class BackupManager
      */
     public static function getInstance(): BackupManager
     {
-        return static::$instance;
+        return self::$instance;
     }
 
     //====================================================================//
@@ -172,7 +172,7 @@ class BackupManager
         // Ensure Load Operations
         $this->loadOperations();
 
-        return $this->operations;
+        return $this->operations ?? array();
     }
 
     /**

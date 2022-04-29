@@ -43,7 +43,9 @@ if [ ! -d "$DIR_PLUGINS" ]; then
     exit 0
 fi
 curl -s -o "$DIR_PLUGINS/check_prx_backups.sh" "$URL_PLUGINS/check_prx_backups.sh"
+chmod 775 "$DIR_PLUGINS/check_prx_backups.sh"
 curl -s -o "$DIR_PLUGINS/check_prx_status.sh" "$URL_PLUGINS/check_prx_status.sh"
+chmod 775 "$DIR_PLUGINS/check_prx_status.sh"
 echo "[OK] Plugins Downloaded to $DIR_PLUGINS"
 ################################################################
 # Generate NRPE Config File
