@@ -98,7 +98,8 @@ pages:
     # Run Test Script
     script:
         - cp .env.test .env
-        # Run Composer to Build Dependencies
+        - cp -Rf ./scripts ./src/Docs/
+      # Run Composer to Build Dependencies
         - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
         # Build Documentation
         - php vendor/bin/grumphp run --tasks=build-docs

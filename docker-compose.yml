@@ -27,9 +27,12 @@ services:
         container_name: dev.paddock.local
         volumes:
             - symfony-var:/var/www/html/var
+            - backup-nfs:/var/nfs
             - './:/var/www/html:ro'
             - './tests/Fixtures:/var/www/source'
             - ./docker/ssh-config:/etc/ssh:ro
+        depends_on:
+            - backup-2
         hostname:           dev.paddock.local
         networks:
             paddock:        { ipv4_address: 172.202.0.10, aliases: [ dev.paddock.local ] }
@@ -93,6 +96,19 @@ services:
             paddock:      { ipv4_address: 172.202.0.31, aliases: [ backup-1.paddock.local ] }
 
     ################################################################################
+    # Nfs Location Storage Container
+    backup-2:
+        image: erichough/nfs-server
+        container_name: backup-2.paddock.local
+        privileged: true
+        volumes:
+            - ./tests/backup-2:/home/backups
+        environment:
+            - NFS_EXPORT_0=/home/backups                  *(rw,sync,no_subtree_check)
+        networks:
+            paddock:      { ipv4_address: 172.202.0.32, aliases: [ backup-2.paddock.local ] }
+
+    ################################################################################
     # PhpMyAdmin Container
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:5
@@ -110,7 +126,12 @@ services:
 
 volumes:
     symfony-var:    ~
-
+    backup-nfs:
+        driver: local
+        driver_opts:
+          type: "nfs"
+          o: "addr=172.202.0.32,nolock,rw"
+          device: ":/home/backups"
 networks:
     ################################################################################
     # Default Private Network
