@@ -42,9 +42,9 @@ function check_qemu_backups() {
           if [ $COUNT -gt 0 ]; then
                 BACKUP_COUNT=$COUNT
                 BACKUP_TYPE="QEMU"
-                LINE=$(cat $LIST | tail -1)
-                BACKUP_DATE_A=$(echo $LINE | cut -d' ' -f 1 | cut -d'-' -f 5| sed "s/_/-/g")
-                BACKUP_DATE_B=$(echo $LINE | cut -d' ' -f 1 | cut -d'-' -f 6| cut -d'.' -f 1| sed "s/_/:/g")
+                LINE=$(cat $LIST | tail -1 | cut -d':' -f 2-10)
+                BACKUP_DATE_A=$(echo $LINE | cut -d' ' -f 1 | cut -d'-' -f 4| sed "s/_/-/g")
+                BACKUP_DATE_B=$(echo $LINE | cut -d' ' -f 1 | cut -d'-' -f 5| cut -d'.' -f 1| sed "s/_/:/g")
                 BACKUP_DATE="$BACKUP_DATE_A $BACKUP_DATE_B"
                 BACKUP_SIZE=$(echo $LINE | cut -d' ' -f 4)
           fi
@@ -56,7 +56,7 @@ function check_server_backups() {
         echo "$storageList" | grep "/vm/$@" > $LIST
         COUNT=$(wc -l < $LIST)
         if [ $COUNT -gt 0 ]; then
-                LINE=$(cat $LIST | tail -1)
+                LINE=$(cat $LIST | tail -1 | cut -d':' -f 2-10)
                 BACKUP_TYPE="Prx Server"
                 BACKUP_COUNT=$COUNT
                 BACKUP_DATE=$(echo $LINE | cut -d' ' -f 1 | cut -d'/' -f 4)
