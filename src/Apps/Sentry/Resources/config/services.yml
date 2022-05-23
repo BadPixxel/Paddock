@@ -1,0 +1,21 @@
+
+services:
+
+    # default configuration for services in *this* file
+    _defaults:
+        autowire:       true
+        autoconfigure:  true
+
+    ########################################################################
+    #   PADDOCK SENTRY SERVICES
+    ########################################################################
+
+    BadPixxel\Paddock\Apps\Sentry\Services\StatsManager: ~
+
+    ########################################################################
+    #   DATA COLLECTORS
+    ########################################################################
+
+    BadPixxel\Paddock\Apps\Sentry\Collector\:
+        resource: '../../Collector/'
+        tags:    [ 'paddock.collector' ]

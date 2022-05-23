@@ -16,5 +16,8 @@ imports:
     # Minimal Nrpe Verifications
     - src/Apps/Nrpe/Resources/tracks/test/nrpe-config.yml
 
+    # Minimal Sentry Verifications
+    - src/Apps/Sentry/Resources/tracks/test/sentry-config.yml
+
     # Backup Operations
     - src/Backup/Resources/backups/test/backup-local.yml

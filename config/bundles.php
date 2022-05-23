@@ -20,6 +20,7 @@ return array(
     BadPixxel\Paddock\System\MongoDb\PaddockMongoDbBundle::class => array('all' => true),
     BadPixxel\Paddock\System\Shell\PaddockShellBundle::class => array('all' => true),
     BadPixxel\Paddock\Apps\Nrpe\PaddockNrpeBundle::class => array('all' => true),
+    BadPixxel\Paddock\Apps\Sentry\PaddockSentryBundle::class => array('all' => true),
     BadPixxel\Paddock\Backup\BackupBundle::class => array('all' => true),
 
     Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => array('all' => true),
