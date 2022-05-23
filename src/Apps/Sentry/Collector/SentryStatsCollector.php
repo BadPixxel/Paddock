@@ -84,7 +84,7 @@ class SentryStatsCollector extends AbstractCollector
         $dotEnvUrl = EnvLoader::get("SENTRY_URL");
         //====================================================================//
         // Sentry Generic Connexion Url
-        $resolver->setDefault("url", $dotEnvUrl ?: "sentry.io/api/0");
+        $resolver->setDefault("url", $dotEnvUrl ?: "https://sentry.io/api/0");
         $resolver->setAllowedTypes("url", array("null", "string"));
         //====================================================================//
         // User API Token
