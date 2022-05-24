@@ -46,8 +46,8 @@ if [ ! -d "$DIR_CONFIG" ]; then
     echo "[KO] Directory $DIR_CONFIG does not exits"
     exit 0
 fi
-CONFIG_SAMPLE="$DIR_CONFIG/paddock_prx.cfg"
-CONFIG_FILE="$DIR_CONFIG/paddock_prx.cfg.sample"
+CONFIG_SAMPLE="$DIR_CONFIG/paddock_prx.cfg.sample"
+CONFIG_FILE="$DIR_CONFIG/paddock_prx.cfg"
 echo "################################################################" >  $CONFIG_SAMPLE
 echo "#                PADDOCK NRPE CONFIG FOR PROXMOX               #" >> $CONFIG_SAMPLE
 echo "################################################################" >> $CONFIG_SAMPLE
