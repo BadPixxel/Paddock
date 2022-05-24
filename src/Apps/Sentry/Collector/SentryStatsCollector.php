@@ -96,7 +96,7 @@ class SentryStatsCollector extends AbstractCollector
         $resolver->setAllowedTypes("organization", array("null", "string"));
         //====================================================================//
         // Statistics Period
-        $resolver->setDefault("period", "1d");
+        $resolver->setDefault("period", "1h");
         $resolver->setAllowedTypes("period", array("string"));
     }
 
