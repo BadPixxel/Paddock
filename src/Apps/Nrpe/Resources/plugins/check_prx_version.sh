@@ -42,7 +42,6 @@ fi
 ######################################
 # Read PVE Version
 VERSION=$(pveversion | grep "manager" | cut -d'/' -f 2 | cut -d'-' -f 1);
-echo $VERSION
 ######################################
 # Compare Version
 if version_ge $VERSION $1; then
