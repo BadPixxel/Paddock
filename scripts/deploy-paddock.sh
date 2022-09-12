@@ -49,7 +49,7 @@ rm -Rf var/cache/
 # Run Composer Install
 ################################################################
 echo "\033[32m Composer Update                       \033[0m";
-composer update
+composer update --no-dev
 
 ################################################################
 # Setup Paddock
