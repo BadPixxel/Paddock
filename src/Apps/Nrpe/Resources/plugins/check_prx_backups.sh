@@ -29,7 +29,7 @@ function usage() {
         echo "STORAGE:          Name of your proxmox backup storage. Default backup-server"
         echo
         echo "The user nagios executes the pvesm binary via sudo. For this to work you have to modify your /etc/sudoers. E.g:"
-        echo "  'nagios ALL=NOPASSWD: /usr/sbin/pvesm list *, /usr/bin/pvectl list *, /usr/bin/lxc-ls, /usr/sbin/qm list *'"
+        echo "  'nagios ALL=NOPASSWD: /usr/sbin/pvesm list *, /usr/bin/pvectl list *, /usr/bin/lxc-ls, /usr/sbin/qm list'"
         echo
         exit 1
 }
