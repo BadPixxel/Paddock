@@ -19,6 +19,7 @@ use BadPixxel\Paddock\Core\Models\RulesAwareTrait;
 use BadPixxel\Paddock\Core\Services\LogManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use Iterator;
 use Monolog\Logger;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use TypeError;
@@ -83,14 +84,14 @@ abstract class AbstractTrack
     /**
      * Rules / Constraints Collection
      *
-     * @var ArrayCollection
+     * @var ArrayCollection<array>
      */
     private $rules;
 
     /**
      * Child Tracks
      *
-     * @var ArrayCollection
+     * @var ArrayCollection<array>
      */
     private $children;
 
@@ -308,6 +309,29 @@ abstract class AbstractTrack
     }
 
     /**
+     * Get Rules / Constraints Iterator
+     *
+     * @throws Exception
+     *
+     * @return Iterator<array>
+     */
+    public function getRulesIterator(): Iterator
+    {
+        /** @phpstan-ignore-next-line */
+        return $this->rules->getIterator();
+    }
+
+    /**
+     * Get Rules / Constraints Count
+     *
+     * @return int
+     */
+    public function getRulesCount(): int
+    {
+        return $this->rules->count();
+    }
+
+    /**
      * Get Child Tracks
      *
      * @return array[]
@@ -369,7 +393,6 @@ abstract class AbstractTrack
 
         //====================================================================//
         // Validate Rule Options
-        $this->setContext($this->getCode(), $ruleCode, "Rule Options", $ruleOptions);
         if (!$this->getRuleByCode($ruleCode)->validateOptions($ruleOptions)) {
             return false;
         }

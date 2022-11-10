@@ -27,8 +27,11 @@ services:
     BadPixxel\Paddock\Core\Services\TracksManager:
         public: true
 
+
     BadPixxel\Paddock\Core\Services\TracksRunner:
         public: true
+        bind:
+            $env:   "%kernel.environment%"
 
     ########################################################################
     #   PADDOCK EVENTS SUBSCRIBER

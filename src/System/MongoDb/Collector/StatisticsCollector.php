@@ -13,7 +13,6 @@
 
 namespace BadPixxel\Paddock\System\MongoDb\Collector;
 
-use BadPixxel\Paddock\Core\Services\LogManager;
 use BadPixxel\Paddock\System\MongoDb\Models\AbstractMongoDbCollector;
 use MongoDB\Client;
 
@@ -51,9 +50,6 @@ class StatisticsCollector extends AbstractMongoDbCollector
      */
     public function getValue(Client $connexion, string $key): string
     {
-        //====================================================================//
-        // Override Rule Name for Logs
-        LogManager::getInstance()->setContextRule("STATS");
         //====================================================================//
         // Select database
         $dbName = $this->getDatabaseName($connexion);

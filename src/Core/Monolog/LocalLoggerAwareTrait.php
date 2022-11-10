@@ -11,16 +11,119 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\Paddock\Core\Models;
+namespace BadPixxel\Paddock\Core\Monolog;
 
-use BadPixxel\Paddock\Core\Services\LogManager;
+use BadPixxel\Paddock\Core\Monolog\Handler\LocalHandler;
+use Exception;
 use Monolog\Logger;
 
 /**
  * Make a Class Aware of Paddock Log Manager
  */
-trait LoggerAwareTrait
+trait LocalLoggerAwareTrait
 {
+    /**
+     * @var null|Logger
+     */
+    private $logger;
+
+    /**
+     * @var string
+     */
+    private static $logPrefix = '';
+
+    //====================================================================//
+    // LOGGER MANAGEMENT
+    //====================================================================//
+
+    /**
+     * Get Local Logger
+     *
+     * @return Logger
+     */
+    public function getLogger(): Logger
+    {
+        if (!isset($this->logger)) {
+            $this->logger = new Logger(
+                basename(static::class),
+                array(new LocalHandler())
+            );
+        }
+
+        return $this->logger;
+    }
+
+    /**
+     * Set Local Logger
+     *
+     * @param Logger $logger
+     *
+     * @return self
+     */
+    public function setLogger(Logger $logger): self
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+    /**
+     * Get Local Logger Handler
+     *
+     * @throws Exception
+     *
+     * @return LocalHandler
+     */
+    public function getHandler(): LocalHandler
+    {
+        foreach ($this->getLogger()->getHandlers() as $handler) {
+            if ($handler instanceof LocalHandler) {
+                return $handler;
+            }
+        }
+
+        throw new Exception('No Test Logger Handler');
+    }
+
+    /**
+     * Get Local Logger Records
+     *
+     * @throws Exception
+     *
+     * @return array[]
+     */
+    public function getRecords(): array
+    {
+        return $this->getHandler()->getRecords();
+    }
+
+    //====================================================================//
+    // CONTEXT MANAGEMENT
+    //====================================================================//
+
+    /**
+     * Setup Log Context
+     *
+     * @param null|string $trackCode
+     * @param null|string $ruleCode
+     * @param null|string $key
+     *
+     * @return self
+     */
+    public function setContext(?string $trackCode, ?string $ruleCode, ?string $key = null): self
+    {
+        //====================================================================//
+        // Build Message Prefix
+        self::$logPrefix = $trackCode ? '['.$trackCode."]" : '';
+        if ($ruleCode && ("value" != $ruleCode)) {
+            self::$logPrefix .= '['.$ruleCode."]";
+        }
+        self::$logPrefix .= $key ? '['.$key."]": '';
+        self::$logPrefix = self::$logPrefix ? self::$logPrefix.' ' : '';
+
+        return $this;
+    }
+
     //====================================================================//
     // PUSH LOG MESSAGES
     //====================================================================//
@@ -33,7 +136,7 @@ trait LoggerAwareTrait
      *
      * @return bool
      */
-    public function debug(string $message, array $context = null): bool
+    protected function debug(string $message, array $context = null): bool
     {
         return $this->log(Logger::DEBUG, $message, $context);
     }
@@ -48,7 +151,7 @@ trait LoggerAwareTrait
      *
      * @return bool
      */
-    public function info(string $message, array $context = null): bool
+    protected function info(string $message, array $context = null): bool
     {
         return $this->log(Logger::INFO, $message, $context);
     }
@@ -63,7 +166,7 @@ trait LoggerAwareTrait
      *
      * @return bool
      */
-    public function notice(string $message, array $context = null): bool
+    protected function notice(string $message, array $context = null): bool
     {
         return $this->log(Logger::NOTICE, $message, $context);
     }
@@ -78,7 +181,7 @@ trait LoggerAwareTrait
      *
      * @return bool
      */
-    public function warning(string $message, array $context = null): bool
+    protected function warning(string $message, array $context = null): bool
     {
         return $this->log(Logger::WARNING, $message, $context);
     }
@@ -93,7 +196,7 @@ trait LoggerAwareTrait
      *
      * @return bool
      */
-    public function error(string $message, array $context = null): bool
+    protected function error(string $message, array $context = null): bool
     {
         return $this->log(Logger::ERROR, $message, $context);
     }
@@ -108,7 +211,7 @@ trait LoggerAwareTrait
      *
      * @return bool
      */
-    public function critical(string $message, array $context = null): bool
+    protected function critical(string $message, array $context = null): bool
     {
         return $this->log(Logger::CRITICAL, $message, $context);
     }
@@ -123,7 +226,7 @@ trait LoggerAwareTrait
      *
      * @return bool
      */
-    public function alert(string $message, array $context = null): bool
+    protected function alert(string $message, array $context = null): bool
     {
         return $this->log(Logger::ALERT, $message, $context);
     }
@@ -138,7 +241,7 @@ trait LoggerAwareTrait
      *
      * @return bool
      */
-    public function emergency(string $message, array $context = null): bool
+    protected function emergency(string $message, array $context = null): bool
     {
         return $this->log(Logger::EMERGENCY, (string) $message, $context);
     }
@@ -152,24 +255,10 @@ trait LoggerAwareTrait
      *
      * @return bool
      */
-    public function log(int $level, string $message, ?array $context = null): bool
+    protected function log(int $level, string $message, ?array $context = null): bool
     {
-        $this->getLogger()->log($level, $message, $context);
+        $this->getLogger()->log($level, self::$logPrefix.$message, $context ?? array());
 
         return ($level < Logger::ERROR);
-    }
-
-    //====================================================================//
-    // LOGGER MANAGEMENT
-    //====================================================================//
-
-    /**
-     * Get Log Manager
-     *
-     * @return LogManager
-     */
-    protected function getLogger(): LogManager
-    {
-        return LogManager::getInstance();
     }
 }

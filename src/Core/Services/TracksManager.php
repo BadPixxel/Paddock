@@ -121,7 +121,6 @@ class TracksManager
         // Walk on Defined Tracks
         $this->tracks = array();
         foreach ($config["tracks"] as $code => $track) {
-            $this->logManager->setContext($code, null, "definition", $track);
             if (!Track::validateOptions($track, $this->logManager)) {
                 continue;
             }

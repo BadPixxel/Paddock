@@ -13,7 +13,6 @@
 
 namespace BadPixxel\Paddock\System\MongoDb\Collector;
 
-use BadPixxel\Paddock\Core\Services\LogManager;
 use BadPixxel\Paddock\System\MongoDb\Models\AbstractMongoDbCollector;
 use MongoDB\Client;
 
@@ -48,9 +47,6 @@ class VersionCollector extends AbstractMongoDbCollector
     public function getValue(Client $connexion, string $key): string
     {
         //====================================================================//
-        // Override Rule Name for Logs
-        LogManager::getInstance()->setContextRule("VERSION");
-        //====================================================================//
         // Execute Mongo Query
         try {
             $results = $connexion->selectDatabase("admin")->command(array(
@@ -73,7 +69,6 @@ class VersionCollector extends AbstractMongoDbCollector
         // Extract Array value from Results
         if (is_array($result) && isset($result["version"])) {
             return (string) $result["version"];
-            ;
         }
 
         return ' ';
