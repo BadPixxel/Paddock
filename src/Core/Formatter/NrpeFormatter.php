@@ -151,7 +151,7 @@ class NrpeFormatter extends AbstractFormatter
     {
         //====================================================================//
         // Safety Check
-        if (!is_array($this->options[$name]) || !is_array($this->options[$name])) {
+        if (!isset($this->options[$name]) || !is_array($this->options[$name])) {
             return ";";
         }
         //====================================================================//

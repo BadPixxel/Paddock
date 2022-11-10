@@ -166,12 +166,12 @@ class RdiffLocation extends AbstractLocation
      */
     private function ensureBinaryIsInstalled(): bool
     {
-        return $this->tracksRunner->runOne(array(
+        return !$this->tracksRunner->executeRule(null, array(
             "collector" => "apt-version",
             "rule" => "version",
             "key" => "rdiff-backup",
             "ne" => true,
-        ));
+        ))->hasErrors();
     }
 
     /**

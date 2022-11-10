@@ -127,9 +127,6 @@ class CommandsManager
         foreach ($allTracks as $code => $track) {
             $rawConfig .= $this->buildCommand("paddock_".$code, $code, $binary).PHP_EOL;
         }
-        //====================================================================//
-        // Reset Logger Context
-        $this->getLogger()->resetContext();
 
         return $rawConfig;
     }
