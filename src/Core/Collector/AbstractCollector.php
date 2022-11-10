@@ -16,7 +16,6 @@ namespace BadPixxel\Paddock\Core\Collector;
 use BadPixxel\Paddock\Core\Monolog\LocalLoggerAwareTrait;
 use BadPixxel\Paddock\Core\Services\ConfigurationManager;
 use Exception;
-use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Cache\CacheInterface;
 use TypeError;
