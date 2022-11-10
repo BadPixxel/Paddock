@@ -13,26 +13,49 @@
 
 namespace BadPixxel\Paddock\Core\Formatter;
 
-use Monolog\Formatter\JsonFormatter as BaseFormatter;
+use BadPixxel\Paddock\Core\Models\Formatter\AbstractFormatter;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class JsonFormatter
  */
-class JsonFormatter extends BaseFormatter
+class JsonFormatter extends AbstractFormatter
 {
     /**
-     * {@inheritdoc}
-     *
-     * @param int $depth
+     * {@inheritDoc}
      */
-    public function normalize($data, $depth = 0)
+    public function getStatusCode(): int
     {
-        $normalized = parent::normalize($data, $depth);
+        return 0;
+    }
 
-        if ((1 == $depth) && is_array($normalized)) {
-            unset($normalized["datetime"], $normalized["level"], $normalized["level_name"], $normalized["channel"], $normalized["extra"], $normalized["formatted"]);
-        }
+    /**
+     * {@inheritDoc}
+     */
+    public function getStatus(): string
+    {
+        return (string) json_encode(array(
+            "logs" => $this->records,
+            "counters" => $this->counters,
+            "options" => $this->options,
+        ));
+    }
 
-        return $normalized;
+    /**
+     * {@inheritDoc}
+     */
+    public function getResponse(): Response
+    {
+        return new Response(
+            $this->getStatus(),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Analyze Records
+     */
+    protected function parse(): void
+    {
     }
 }

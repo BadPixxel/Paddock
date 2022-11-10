@@ -13,7 +13,7 @@
 
 namespace BadPixxel\Paddock\Core\Collector;
 
-use BadPixxel\Paddock\Core\Models\LoggerAwareTrait;
+use BadPixxel\Paddock\Core\Monolog\LocalLoggerAwareTrait;
 use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use TypeError;
@@ -23,7 +23,7 @@ use TypeError;
  */
 abstract class AbstractCollector implements CollectorInterface
 {
-    use LoggerAwareTrait;
+    use LocalLoggerAwareTrait;
 
     /**
      * @var array

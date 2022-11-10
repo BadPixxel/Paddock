@@ -23,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Run One or All Defined Tracks
  */
-class VerifyCommand extends AbstractCommand
+class RunOneCommand extends AbstractCommand
 {
     /**
      * Configure Command.
@@ -31,10 +31,11 @@ class VerifyCommand extends AbstractCommand
     protected function configure(): void
     {
         $this
-            ->setName('paddock:run')
-            ->setDescription('Run One or All Defined Tracks')
-            ->addArgument('track', InputArgument::OPTIONAL, 'Track Code to Execute')
-            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Response Format')
+            ->setName('paddock:runOne')
+            ->setDescription('Verify One Rule with Options')
+            ->addArgument('options', InputArgument::REQUIRED, 'Rule Options (json)')
+            ->addArgument('track', InputArgument::OPTIONAL, 'Track Code')
+            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Response Format', 'json')
         ;
     }
 
@@ -47,8 +48,6 @@ class VerifyCommand extends AbstractCommand
      * @throws Exception
      *
      * @return int
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -56,32 +55,28 @@ class VerifyCommand extends AbstractCommand
         // Init Paddock Command
         $this->init($input, $output);
         //====================================================================//
-        // Execute Command in a Sandbox
+        // Load Arguments
+        /** @var string $options */
+        $options = $input->getArgument("options");
+        /** @var string $trackCode */
+        $trackCode = $input->getArgument("track");
+        $track = $this->tracks->getByCode($trackCode);
+        //====================================================================//
+        // Try to decode Rule Options
+        $ruleOptions = json_decode($options, true);
+        if (!is_array($ruleOptions)) {
+            $this->error(json_last_error_msg());
+            //====================================================================//
+            // Close Paddock Command
+            return $this->close($input, $output);
+        }
+        //====================================================================//
+        // Execute Rule Verification in a Sandbox
         try {
+            $testHandler = $this->runner->executeRule($track, $ruleOptions);
             //====================================================================//
-            // Detect Tracks to Execute
-            $trackCode = $input->getArgument("track");
-            if (!empty($trackCode) && ("all" != $trackCode)) {
-                //====================================================================//
-                // Run ONE Track
-                if (!is_string($trackCode)) {
-                    $this->error("Track Code is not a string!");
-                    //====================================================================//
-                    // Close Paddock Command
-                    return $this->close($input, $output);
-                }
-                $this->runner->run($trackCode, 0);
-                //====================================================================//
-                // Close Paddock Command
-                return $this->close($input, $output);
-            }
-            //====================================================================//
-            // Run All Active Tracks
-            foreach ($this->tracks->getAll() as $trackCode => $track) {
-                if ($track->isEnabled()) {
-                    $this->runner->run($trackCode, 0);
-                }
-            }
+            // Import results to Logger
+            $this->logger->importLogs($testHandler->getRecords());
         } catch (\Throwable $throwable) {
             $this->error($throwable->getMessage());
         }
