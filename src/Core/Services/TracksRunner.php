@@ -159,7 +159,7 @@ class TracksRunner
         );
         //====================================================================//
         // Get User Given Nb Process
-        $nbProcess = $nbProcess ? (int) $nbProcess : $nbCpu;
+        $nbProcess = !is_null($nbProcess) ? (int) $nbProcess : $nbCpu;
         //====================================================================//
         // Init Processes Array
         $this->processes = array();

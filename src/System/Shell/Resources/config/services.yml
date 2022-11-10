@@ -12,6 +12,8 @@ services:
 
     BadPixxel\Paddock\System\Shell\EventSubscriber\:
         resource: '../../EventSubscriber/'
+        bind:
+            $env: "%kernel.environment%"
         tags:    [ kernel.event_subscriber ]
 
     ########################################################################

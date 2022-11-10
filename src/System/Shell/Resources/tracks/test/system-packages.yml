@@ -25,10 +25,3 @@ tracks:
             id:                 { ne: true, eq: { warning: "Debian" } }
             codename:           { ne: true, eq: { warning: "bullseye" } }
             release:            { rule: version, ne: true, gte: { error: "18.04", warning: "20.04" } }
-
-    test-system-services:
-        collector:      "service"
-        description:    "TEST - System Services Actives"
-        enabled:        false
-        rules:
-            apache2:            { ne: true }

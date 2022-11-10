@@ -13,8 +13,10 @@
 
 namespace BadPixxel\Paddock\Core\DependencyInjection;
 
+use Exception;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -23,14 +25,27 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * @see http://symfony.com/doc/current/cookbook/bundles/extension.html
  */
-class CoreExtension extends Extension
+class CoreExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws Exception
+     */
+    public function prepend(ContainerBuilder $container): void
+    {
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('cache.yml');
     }
 }

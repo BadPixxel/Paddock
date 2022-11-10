@@ -15,6 +15,7 @@ namespace BadPixxel\Paddock\System\Shell\EventSubscriber;
 
 use BadPixxel\Paddock\Core\Events\GetConstraintsEvent;
 use BadPixxel\Paddock\System\Shell\Rules;
+use Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ConstraintsSubscriber implements EventSubscriberInterface
@@ -30,7 +31,11 @@ class ConstraintsSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Add Bundle Rules to Paddock
+     *
      * @param GetConstraintsEvent $event
+     *
+     * @throws Exception
      */
     public function registerConstraints(GetConstraintsEvent $event): void
     {

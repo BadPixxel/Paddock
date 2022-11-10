@@ -40,32 +40,32 @@ abstract class AbstractTrack
     protected $overrides = array();
 
     /**
-     * Track Identifier
-     *
-     * @var string
-     */
-    private $code;
-
-    /**
      * Enabled Flag
      *
      * @var bool
      */
-    private $enabled = true;
+    protected $enabled = true;
 
     /**
      * Track Description
      *
      * @var string
      */
-    private $description = "This track as no description.";
+    protected $description = "This track as no description.";
 
     /**
      * Default Data Collector Code
      *
      * @var string
      */
-    private $collector;
+    protected $collector;
+
+    /**
+     * Track Identifier
+     *
+     * @var string
+     */
+    private $code;
 
     /**
      * Default Data Collector Options

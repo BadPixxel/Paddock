@@ -17,7 +17,7 @@ use BadPixxel\Paddock\Core\Loader\EnvLoader;
 use BadPixxel\Paddock\Core\Loader\FileLoader;
 use BadPixxel\Paddock\Core\Loader\YamlLoader;
 use BadPixxel\Paddock\Core\Models\LoggerAwareTrait;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
 /**
@@ -30,7 +30,7 @@ class ConfigurationManager
     const CACHE_KEY = "paddock_config";
 
     /**
-     * @var FilesystemAdapter
+     * @var CacheInterface
      */
     private $cache;
 
@@ -42,13 +42,14 @@ class ConfigurationManager
     /**
      * Service Constructor
      *
-     * @param string $projectDir
+     * @param string         $projectDir
+     * @param CacheInterface $paddockConfigs
      */
-    public function __construct(string $projectDir)
+    public function __construct(string $projectDir, CacheInterface $paddockConfigs)
     {
         //====================================================================//
         // Init cache
-        $this->cache = new FilesystemAdapter();
+        $this->cache = $paddockConfigs;
         //====================================================================//
         // Init Dot Env Variables
         EnvLoader::loadDotEnv($projectDir);
@@ -104,8 +105,6 @@ class ConfigurationManager
             // The callable will only be executed on a cache miss.
             /** @var array $configCache */
             $configCache = $this->cache->get(self::CACHE_KEY, function (ItemInterface $item) {
-                $item->expiresAfter(3660);
-
                 return $this->loadFromPath();
             });
 
@@ -165,7 +164,7 @@ class ConfigurationManager
     /**
      * Uses cache
      */
-    private static function isCacheEnabled(): bool
+    public static function isCacheEnabled(): bool
     {
         if (!empty(EnvLoader::get("APP_DEBUG", "0"))) {
             return false;
