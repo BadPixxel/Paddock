@@ -13,7 +13,7 @@
         "ext-zip":      "*",
         "ext-curl":     "*",
 
-        "composer/package-versions-deprecated":     "1.11.99.4",
+        "composer/package-versions-deprecated":     "~1.11",
 
         "doctrine/doctrine-bundle":                 "^2.4",
         "doctrine/doctrine-migrations-bundle":      "^3.1",
@@ -22,13 +22,14 @@
         "doctrine/cache":                           "^1.4.0",
         "doctrine/doctrine-fixtures-bundle":        "^3.4",
 
-        "symfony/console":                          "4.4.*",
-        "symfony/dotenv":                           "4.4.*",
+        "symfony/console":                          "~4.4",
+        "symfony/dotenv":                           "~4.4",
         "symfony/flex":                             "^1.3.1",
-        "symfony/framework-bundle":                 "4.4.*",
-        "symfony/monolog-bridge":                   "4.4.*",
-        "symfony/proxy-manager-bridge":             "4.4.*",
-        "symfony/yaml":                             "4.4.*",
+        "symfony/framework-bundle":                 "~4.4",
+        "symfony/monolog-bridge":                   "~4.4",
+        "symfony/proxy-manager-bridge":             "~4.4",
+        "symfony/yaml":                             "~4.4",
+        "symfony/process":                          "~4.4",
 
         "gaufrette/phpseclib-sftp-adapter":         "^0.4.0",
         "knplabs/knp-gaufrette-bundle":             "^0.7.1"

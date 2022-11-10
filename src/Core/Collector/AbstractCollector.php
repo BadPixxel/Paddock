@@ -108,8 +108,6 @@ abstract class AbstractCollector implements CollectorInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @throws InvalidArgumentException
      */
     final public function getData(array $options, string $key)
     {
