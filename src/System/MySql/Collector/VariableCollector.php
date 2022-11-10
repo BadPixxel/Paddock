@@ -13,7 +13,6 @@
 
 namespace BadPixxel\Paddock\System\MySql\Collector;
 
-use BadPixxel\Paddock\Core\Services\LogManager;
 use BadPixxel\Paddock\System\MySql\Models\AbstractMySqlCollector;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
@@ -50,9 +49,6 @@ class VariableCollector extends AbstractMySqlCollector
      */
     public function getValue(Connection $connexion, string $key): string
     {
-        //====================================================================//
-        // Override Rule Name for Logs
-        LogManager::getInstance()->setContextRule("VARIABLE");
         //====================================================================//
         // Execute My SQl Query
         $result = $connexion->prepare("SELECT ".$key.";")->executeQuery();

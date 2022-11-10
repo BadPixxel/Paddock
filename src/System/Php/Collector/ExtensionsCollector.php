@@ -13,7 +13,6 @@
 
 namespace BadPixxel\Paddock\System\Php\Collector;
 
-use BadPixxel\Paddock\Core\Services\LogManager;
 use BadPixxel\Paddock\System\Php\Models\AbstractPhpCollector;
 use Exception;
 
@@ -51,9 +50,6 @@ class ExtensionsCollector extends AbstractPhpCollector
     public function getLocalValue(string $key): string
     {
         //====================================================================//
-        // Override Rule Name for Logs
-        LogManager::getInstance()->setContextRule("PHP EXT");
-        //====================================================================//
         // Get Extension Version from Current Php Session
         $value = phpversion($key);
 
@@ -69,9 +65,6 @@ class ExtensionsCollector extends AbstractPhpCollector
      */
     public function getExternalValue(string $binary, string $key): string
     {
-        //====================================================================//
-        // Override Rule Name for Logs
-        LogManager::getInstance()->setContextRule(ucfirst(basename($binary))." EXT");
         //====================================================================//
         // Get Ini Value from Shell
         $value = shell_exec($binary.' -r "echo phpversion(\''.$key.'\');"');

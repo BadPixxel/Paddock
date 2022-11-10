@@ -13,8 +13,8 @@
 
 namespace BadPixxel\Paddock\Core\Models\Rules;
 
-use BadPixxel\Paddock\Core\Models\LoggerAwareTrait;
 use BadPixxel\Paddock\Core\Models\RulesAwareTrait;
+use BadPixxel\Paddock\Core\Monolog\LocalLoggerAwareTrait;
 use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use TypeError;
@@ -24,7 +24,7 @@ use TypeError;
  */
 abstract class AbstractRule implements RuleInterface
 {
-    use LoggerAwareTrait;
+    use LocalLoggerAwareTrait;
     use RulesAwareTrait;
 
     /**
@@ -176,6 +176,7 @@ abstract class AbstractRule implements RuleInterface
             // Prepare Options for this Rule
             $resolver = new OptionsResolver();
             $rule->configureOptions($resolver);
+            $rule->setLogger($this->getLogger());
             //====================================================================//
             // Execute Rule Verifications
             return $rule->execute(

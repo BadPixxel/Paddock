@@ -13,7 +13,6 @@
 
 namespace BadPixxel\Paddock\System\MongoDb\Collector;
 
-use BadPixxel\Paddock\Core\Services\LogManager;
 use BadPixxel\Paddock\System\MongoDb\Models\AbstractMongoDbCollector;
 use MongoDB\Client;
 
@@ -48,9 +47,6 @@ class VariableCollector extends AbstractMongoDbCollector
     public function getValue(Client $connexion, string $key): string
     {
         //====================================================================//
-        // Override Rule Name for Logs
-        LogManager::getInstance()->setContextRule("PARAMS");
-        //====================================================================//
         // Execute Mongo Query
         try {
             $results = $connexion->selectDatabase("admin")->command(array(
@@ -75,11 +71,9 @@ class VariableCollector extends AbstractMongoDbCollector
         if (is_array($result)) {
             if (isset($result["version"])) {
                 return (string) $result["version"];
-                ;
             }
             if (isset($result["value"])) {
                 return (string) $result["value"];
-                ;
             }
             $this->error(sprintf("MongoDb parameter %s not allowed!", $key));
 

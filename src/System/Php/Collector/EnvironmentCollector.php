@@ -13,7 +13,6 @@
 
 namespace BadPixxel\Paddock\System\Php\Collector;
 
-use BadPixxel\Paddock\Core\Services\LogManager;
 use BadPixxel\Paddock\System\Php\Models\AbstractPhpCollector;
 use Exception;
 
@@ -54,9 +53,6 @@ class EnvironmentCollector extends AbstractPhpCollector
     public function getLocalValue(string $key): string
     {
         //====================================================================//
-        // Override Rule Name for Logs
-        LogManager::getInstance()->setContextRule("PHP ENV");
-        //====================================================================//
         // Get Ini Value from Current Php Session
         $value = getenv($key);
         if (false === $value) {
@@ -77,9 +73,6 @@ class EnvironmentCollector extends AbstractPhpCollector
      */
     public function getExternalValue(string $binary, string $key): string
     {
-        //====================================================================//
-        // Override Rule Name for Logs
-        LogManager::getInstance()->setContextRule(ucfirst(basename($binary))." ENV");
         //====================================================================//
         // Get PHP Constant from Shell
         $value = shell_exec($binary.' -r "echo getenv(\''.$key.'\');"');

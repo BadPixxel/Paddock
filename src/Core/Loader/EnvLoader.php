@@ -34,7 +34,7 @@ class EnvLoader
         // Init Dot Env Variables
         $envFilePath = realpath($projectDir.'/.env');
         if ($envFilePath && is_file($envFilePath)) {
-            self::$local = (new Dotenv())->parse((string) file_get_contents($envFilePath));
+            self::$local = (new Dotenv(true))->parse((string) file_get_contents($envFilePath));
         }
         //====================================================================//
         // Store Project Dir in Env

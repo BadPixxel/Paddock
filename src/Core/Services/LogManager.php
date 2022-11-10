@@ -15,9 +15,9 @@ namespace BadPixxel\Paddock\Core\Services;
 
 use BadPixxel\Paddock\Core\Formatter;
 use BadPixxel\Paddock\Core\Models\Formatter\AbstractFormatter;
+use BadPixxel\Paddock\Core\Monolog\Handler\LocalHandler;
 use Exception;
 use Monolog\Handler\HandlerInterface;
-use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 
 /**
@@ -29,11 +29,6 @@ class LogManager
      * @var LogManager
      */
     private static $instance;
-
-    /**
-     * @var array
-     */
-    private $context;
 
     /**
      * @var array<string, int>
@@ -51,7 +46,7 @@ class LogManager
     private $logger;
 
     /**
-     * @var TestHandler
+     * @var LocalHandler
      */
     private $logHandler;
 
@@ -67,7 +62,7 @@ class LogManager
         //====================================================================//
         // Configure Logger
         $this->logger = new Logger('paddock');
-        $this->logHandler = new TestHandler(Logger::DEBUG);
+        $this->logHandler = new LocalHandler(Logger::DEBUG);
         $this->logger->pushHandler($this->logHandler);
         //====================================================================//
         // Setup Static Access
@@ -90,24 +85,22 @@ class LogManager
     public function log(int $level, string $message, ?array $context = null): void
     {
         //====================================================================//
-        // Build Message Prefix
-        $prefix = '';
-        if (isset($this->context['track'])) {
-            $prefix .= '['.$this->context['track']."]";
-        }
-        if (isset($this->context['rule'])) {
-            $prefix .= '['.$this->context['rule']."]";
-        }
-        if (isset($this->context['key'])) {
-            $prefix .= '['.$this->context['key']."]";
-        }
-        $prefix = $prefix ? $prefix.' ' : '';
-        //====================================================================//
-        // Build Message Context
-        $context = $this->getLoggerContext($context);
-        //====================================================================//
         // Push to Logger
-        $this->logger->log($level, $prefix.$message, $context);
+        $this->logger->log($level, $message, $context ?? array());
+    }
+
+    /**
+     * Import Track Results to Logger.
+     *
+     * @param array $records
+     *
+     * @return void
+     */
+    public function importLogs(array $records): void
+    {
+        foreach ($records as $record) {
+            $this->log($record["level"], $record["message"], $record["context"]);
+        }
     }
 
     /**
@@ -137,49 +130,6 @@ class LogManager
     }
 
     //====================================================================//
-    // CONTEXT MANAGEMENT
-    //====================================================================//
-
-    /**
-     * Setup Log Context
-     *
-     * @param null|string $trackCode
-     * @param null|string $ruleCode
-     * @param null|string $key
-     * @param null|mixed  $value
-     */
-    public function setContext(?string $trackCode, ?string $ruleCode, ?string $key = null, $value = null): void
-    {
-        $this->context = array(
-            'track' => $trackCode ? self::toName($trackCode) : null,
-            'rule' => $ruleCode ? self::toName($ruleCode) : null,
-            'key' => $key,
-            'value' => $value,
-        );
-    }
-
-    /**
-     * Override Log Context Rule Code
-     * May be used by Collector to detail what we are reading!
-     *
-     * @param string $ruleCode
-     */
-    public function setContextRule(string $ruleCode): void
-    {
-        if (isset($this->context["rule"])) {
-            $this->context["rule"] = $ruleCode;
-        }
-    }
-
-    /**
-     * Reset Logger Context
-     */
-    public function resetContext(): void
-    {
-        $this->context = array();
-    }
-
-    //====================================================================//
     // FORMATTERS MANAGEMENT
     //====================================================================//
 
@@ -200,6 +150,8 @@ class LogManager
         //====================================================================//
         // Select Formatter
         switch ($formatterCode) {
+            case "json":
+                return new Formatter\JsonFormatter($records, $counters, $options);
             case "nrpe":
             default:
                 return new Formatter\NrpeFormatter($records, $counters, $options);
@@ -291,49 +243,33 @@ class LogManager
     /**
      * Get Log Handler
      */
-    public function getHandler(): TestHandler
+    public function getHandler(): LocalHandler
     {
         return $this->logHandler;
     }
 
     /**
-     * Check if There was Errors.
+     * Check if There are Errors.
      *
      * @return bool
      */
     public function hasErrors(): bool
     {
-        foreach (Logger::getLevels() as $level) {
-            if ($level >= Logger::ERROR) {
-                if ($this->logHandler->hasRecords($level)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->logHandler->hasErrors();
     }
 
     /**
-     * Check if There was Warnings.
+     * Check if There are Warnings.
      *
      * @return bool
      */
     public function hasWarnings(): bool
     {
-        foreach (Logger::getLevels() as $level) {
-            if (($level < Logger::ERROR) && ($level >= Logger::WARNING)) {
-                if ($this->logHandler->hasRecords($level)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->logHandler->hasWarnings();
     }
 
     /**
-     * Check if There was Warnings.
+     * Check if There Logs Above Given Level.
      *
      * @param int $minLevel
      *
@@ -350,49 +286,5 @@ class LogManager
         }
 
         return false;
-    }
-
-    //====================================================================//
-    // PRIVATE METHODS
-    //====================================================================//
-
-    /**
-     * Convert Tracks
-     *
-     * @param string $code
-     *
-     * @return string
-     */
-    private static function toName(string $code): string
-    {
-        $code = str_replace("-", " ", $code);
-        $code = str_replace("_", " ", $code);
-
-        return ucwords($code);
-    }
-
-    /**
-     * Convert Tracks
-     *
-     * @param null|array $context
-     *
-     * @return array
-     */
-    private function getLoggerContext(?array $context): array
-    {
-        //====================================================================//
-        // IF Context is Forced
-        if (!empty($context)) {
-            return $context;
-        }
-        //====================================================================//
-        // IF Context Value is Defined
-        if (!empty(isset($this->context['value']))) {
-            return is_array($this->context['value'])
-                ? $this->context['value']
-                : array($this->context['value']);
-        }
-
-        return array();
     }
 }
