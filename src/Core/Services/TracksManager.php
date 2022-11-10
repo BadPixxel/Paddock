@@ -13,9 +13,11 @@
 
 namespace BadPixxel\Paddock\Core\Services;
 
+use BadPixxel\Paddock\Core\Events\GetTracksEvent;
 use BadPixxel\Paddock\Core\Models\Tracks\AbstractTrack;
 use BadPixxel\Paddock\Core\Tracks\Track;
 use Exception;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class TracksManager
 {
@@ -29,23 +31,33 @@ class TracksManager
      */
     private static $instance;
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
     /** @var LogManager */
     private $logManager;
 
     /**
-     * @var null|Track[]
+     * @var null|AbstractTrack[]
      */
     private $tracks;
 
     /**
      * Service Constructor
      *
-     * @param ConfigurationManager $configuration
-     * @param LogManager           $logManager
+     * @param ConfigurationManager     $configuration
+     * @param EventDispatcherInterface $dispatcher
+     * @param LogManager               $logManager
      */
-    public function __construct(ConfigurationManager $configuration, LogManager $logManager)
-    {
+    public function __construct(
+        ConfigurationManager $configuration,
+        EventDispatcherInterface $dispatcher,
+        LogManager $logManager
+    ) {
         $this->configuration = $configuration;
+        $this->dispatcher = $dispatcher;
         $this->logManager = $logManager;
         //====================================================================//
         // Setup Static Access
@@ -77,7 +89,7 @@ class TracksManager
      *
      * @throws Exception
      *
-     * @return Track[]
+     * @return AbstractTrack[]
      */
     public function getAll(): array
     {
@@ -99,19 +111,19 @@ class TracksManager
      *
      * @throws Exception
      */
-    private function loadTracks(): int
+    private function loadTracks(): void
     {
         //====================================================================//
         // Tracks Already Loaded
         if (isset($this->tracks)) {
-            return count($this->tracks);
+            return;
         }
         //====================================================================//
         // Load Paddock Configuration Yaml File
         $config = $this->configuration->load();
         //====================================================================//
         // Safety Check - Tracks are Defined
-        if (!is_array($config) || !isset($config["tracks"])) {
+        if (!isset($config["tracks"])) {
             throw new Exception(sprintf(
                 "No Tracks identified in %s.",
                 $this->configuration->getConfigPath()
@@ -121,17 +133,20 @@ class TracksManager
         // Walk on Defined Tracks
         $this->tracks = array();
         foreach ($config["tracks"] as $code => $track) {
-            if (!Track::validateOptions($track, $this->logManager)) {
+            if (!AbstractTrack::validateOptions($track, $this->logManager)) {
                 continue;
             }
             $this->tracks[$code] = Track::fromArray($code, $track);
         }
         //====================================================================//
+        // Load Tracks via Event Dispatcher
+        /** @var GetTracksEvent $event */
+        $event = $this->dispatcher->dispatch(new GetTracksEvent());
+        $this->tracks = array_replace($this->tracks, $event->all());
+        //====================================================================//
         // Complete Tracks with Children Rules
         foreach ($this->tracks as $track) {
             $track->importChildRules($this->tracks);
         }
-
-        return count($this->tracks);
     }
 }

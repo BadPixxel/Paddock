@@ -34,12 +34,7 @@ class RulesManager
     private $dispatcher;
 
     /**
-     * @var LogManager
-     */
-    private $logManager;
-
-    /**
-     * @var null|AbstractRule[]
+     * @var null|array<string, AbstractRule>
      */
     private $constraints;
 
@@ -51,12 +46,10 @@ class RulesManager
      * Service Constructor
      *
      * @param EventDispatcherInterface $dispatcher
-     * @param LogManager               $logManager
      */
-    public function __construct(EventDispatcherInterface $dispatcher, LogManager $logManager)
+    public function __construct(EventDispatcherInterface $dispatcher)
     {
         $this->dispatcher = $dispatcher;
-        $this->logManager = $logManager;
         //====================================================================//
         // Setup Static Access
         self::$instance = $this;
@@ -123,21 +116,13 @@ class RulesManager
     /**
      * Initialize List of Available Rules / Constraints
      */
-    private function loadRules(): int
+    private function loadRules(): void
     {
         if (!isset($this->constraints)) {
             /** @var GetConstraintsEvent $event */
             $event = $this->dispatcher->dispatch(new GetConstraintsEvent());
 
-            $this->constraints = array();
-            $constraintsList = $event->all();
-            foreach ($constraintsList as $code => $constraintClass) {
-                if (is_subclass_of($constraintClass, AbstractRule::class)) {
-                    $this->constraints[$code] = new $constraintClass($this, $this->logManager->getLogger());
-                }
-            }
+            $this->constraints = $event->all();
         }
-
-        return count($this->constraints);
     }
 }

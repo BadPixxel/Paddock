@@ -14,8 +14,11 @@
 namespace BadPixxel\Paddock\Core\Collector;
 
 use BadPixxel\Paddock\Core\Monolog\LocalLoggerAwareTrait;
+use BadPixxel\Paddock\Core\Services\ConfigurationManager;
 use Exception;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Cache\CacheInterface;
 use TypeError;
 
 /**
@@ -29,6 +32,28 @@ abstract class AbstractCollector implements CollectorInterface
      * @var array
      */
     protected $config;
+
+    /**
+     * @var bool
+     */
+    protected static $enableCache = false;
+
+    /**
+     * @var CacheInterface
+     */
+    private $cache;
+
+    /**
+     * Service Constructor
+     *
+     * @param CacheInterface $paddockCollectors
+     */
+    public function __construct(CacheInterface $paddockCollectors)
+    {
+        //====================================================================//
+        // Init cache
+        $this->cache = $paddockCollectors;
+    }
 
     //====================================================================//
     // DEFINITION
@@ -83,6 +108,8 @@ abstract class AbstractCollector implements CollectorInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @throws InvalidArgumentException
      */
     final public function getData(array $options, string $key)
     {
@@ -92,11 +119,22 @@ abstract class AbstractCollector implements CollectorInterface
         //====================================================================//
         // Load Data from Collector
         try {
-            return $this->get($key);
+            //====================================================================//
+            // Load Collector Data without Cache Management
+            if (!self::isCacheEnabled()) {
+                return $this->get($key);
+            }
+            //====================================================================//
+            // Load Collector Data with Cache Management
+            $cacheKey = $key.md5(serialize($this->config));
+            // The callable will only be executed on a cache miss.
+            return $this->cache->get($cacheKey, function () use ($key) {
+                return $this->get($key);
+            });
         } catch (Exception $ex) {
-            $this->emergency(sprintf("Constraint verification Fail: %s", $ex->getMessage()));
+            $this->emergency(sprintf("Data Collector Fail: %s", $ex->getMessage()));
         } catch (TypeError $ex) {
-            $this->emergency(sprintf("Constraint verification Fail: %s", $ex->getMessage()));
+            $this->emergency(sprintf("Data Collector Fail: %s", $ex->getMessage()));
         }
 
         return null;
@@ -127,5 +165,13 @@ abstract class AbstractCollector implements CollectorInterface
     protected function get(string $key)
     {
         return sprintf("Collector must implement get(string ${key}) function!");
+    }
+
+    /**
+     * Uses cache
+     */
+    protected static function isCacheEnabled(): bool
+    {
+        return static::$enableCache && ConfigurationManager::isCacheEnabled();
     }
 }

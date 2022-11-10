@@ -17,10 +17,13 @@ use BadPixxel\Paddock\Core\Models\Rules\AbstractRule;
 use Exception;
 use Symfony\Contracts\EventDispatcher\Event;
 
+/**
+ * Symfony Event for Collecting Available Tracks Rules
+ */
 class GetConstraintsEvent extends Event
 {
     /**
-     * @var class-string[]
+     * @var array<string, AbstractRule>
      */
     private $constraints = array();
 
@@ -35,9 +38,8 @@ class GetConstraintsEvent extends Event
      */
     public function add(string $constraintClass): self
     {
-        if (self::validate($constraintClass)) {
-            $this->constraints[$constraintClass::getCode()] = $constraintClass;
-        }
+        $constraint = self::validate($constraintClass);
+        $this->constraints[$constraint::getCode()] = $constraint;
 
         return $this;
     }
@@ -45,7 +47,7 @@ class GetConstraintsEvent extends Event
     /**
      * Get All Constraints.
      *
-     * @return array<string, class-string>
+     * @return array<string, AbstractRule>
      */
     public function all(): array
     {
@@ -59,9 +61,9 @@ class GetConstraintsEvent extends Event
      *
      * @throws Exception
      *
-     * @return bool
+     * @return AbstractRule
      */
-    private static function validate(string $constraintClass): bool
+    private static function validate(string $constraintClass): AbstractRule
     {
         //====================================================================//
         // Safety Check - Class Exists
@@ -72,12 +74,12 @@ class GetConstraintsEvent extends Event
         // Safety Check - Implement Abstract Constraint
         if (!is_subclass_of($constraintClass, AbstractRule::class)) {
             throw new Exception(sprintf(
-                "Contraint %s must extends %s.",
+                "Contraint/Rule %s must extends %s.",
                 $constraintClass,
                 AbstractRule::class
             ));
         }
 
-        return true;
+        return new $constraintClass;
     }
 }
