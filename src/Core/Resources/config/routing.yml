@@ -1,6 +1,0 @@
-
-################################################################################
-# Server Config Status as Json
-badpixxel_server_checker_json:
-    path:     /server
-    defaults: { _controller: SfServerCheckerBundle:Check:index }
