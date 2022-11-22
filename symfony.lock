@@ -23,6 +23,12 @@
     "amphp/sync": {
         "version": "v1.4.0"
     },
+    "badpixxel/paddock-core": {
+        "version": "dev-main"
+    },
+    "badpixxel/paddock-mysql": {
+        "version": "dev-main"
+    },
     "badpixxel/php-sdk": {
         "version": "dev-main"
     },

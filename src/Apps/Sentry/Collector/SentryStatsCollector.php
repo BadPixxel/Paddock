@@ -113,11 +113,11 @@ class SentryStatsCollector extends AbstractCollector
             //====================================================================//
             // Execute API Request with Outcome Filter
             if (in_array($key, self::$outcome, true)) {
-                return (int) $this->manager->getLastHourErrors($this->config, $key);
+                return (int) $this->manager->getLastHourErrors($this->getOptions(), $key);
             }
             //====================================================================//
             // Execute API Request without Filter
-            return (int) $this->manager->getLastHourErrors($this->config);
+            return (int) $this->manager->getLastHourErrors($this->getOptions());
         } catch (\Exception $ex) {
             $this->error($ex->getMessage());
         }
