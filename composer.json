@@ -29,6 +29,7 @@
         "symfony/monolog-bridge":                   "4.4.*",
         "symfony/proxy-manager-bridge":             "4.4.*",
         "symfony/yaml":                             "4.4.*",
+        "symfony/process":                          "4.4.*",
 
         "gaufrette/phpseclib-sftp-adapter":         "^0.4.0",
         "knplabs/knp-gaufrette-bundle":             "^0.7.1"
