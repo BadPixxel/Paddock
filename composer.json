@@ -44,8 +44,8 @@
     },
     "scripts": {
         "auto-scripts": [
-            "php bin/console cache:clear",
-            "php bin/console assets:install web",
+            "php bin/paddock cache:clear",
+            "php bin/paddock assets:install web",
             "rm -Rf /tmp/symfony-cache"
         ],
         "post-install-cmd": [
