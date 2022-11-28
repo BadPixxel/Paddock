@@ -110,7 +110,7 @@ pages:
         # Build Documentation
         - php vendor/bin/grumphp run --tasks=build-docs
         # Export Configurations
-        - php bin/console paddock:export public/paddock.yml
+        - php bin/paddock paddock:export public/paddock.yml
     artifacts:
         paths:
             - public
