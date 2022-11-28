@@ -13,7 +13,6 @@
 
 namespace BadPixxel\Paddock\DependencyInjection;
 
-use BadPixxel\Paddock\Core\Tests\Collector\FakeCollector;
 use Exception;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
