@@ -48,7 +48,7 @@ stages:
         - php bin/grumphp run -n --testsuite=phpstan
         ################################################################
         # Execute PhpUnit Tests
-        - vendor/bin/phpunit
+        # - bin/phpunit
 
     ################################################################################
     # Run After Script
