@@ -37,8 +37,16 @@ stages:
     ################################################################################
     # Run Test Script
     script:
-        # Execute Grumphp Testsuite
-        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/grumphp.sh  | sh
+        ################################################################
+        # Grumphp Travis Testsuite
+        - php bin/grumphp run -n --testsuite=travis
+        ################################################################
+        # Grumphp CsFixer Testsuite
+        - php bin/grumphp run -n --testsuite=csfixer
+        ################################################################
+        # Grumphp Php Stan Testsuite
+        - php bin/grumphp run -n --testsuite=phpstan
+        ################################################################
         # Execute PhpUnit Tests
         - vendor/bin/phpunit
 
