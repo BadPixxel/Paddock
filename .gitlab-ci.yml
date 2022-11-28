@@ -82,6 +82,8 @@ docker:
   tags:         [ Dedicated-Docker ]
   services:
     - docker:dind
+  before_script:
+    - docker info
   script:
     - echo "[PADDOCK] Build & Upload Docker Image"
     # Connect Docker to GitLab
