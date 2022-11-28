@@ -1,38 +1,54 @@
 <?php
 
-/*
- *  Copyright (C) BadPixxel <www.badpixxel.com>
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
- */
-
-return array(
-    //====================================================================//
-    // Paddock Core Bundles
-    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => array('all' => true),
-    BadPixxel\Paddock\Core\CoreBundle::class => array('all' => true),
-    Knp\Bundle\GaufretteBundle\KnpGaufretteBundle::class => array('all' => true),
-
-    //====================================================================//
-    // Paddock MySql Bundles
-    BadPixxel\Paddock\System\MySql\PaddockMySqlBundle::class => array('all' => true),
-    Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => array('all' => true),
-
-    //====================================================================//
-    // Paddock MongoDb Bundles
-    BadPixxel\Paddock\System\MongoDb\PaddockMongoDbBundle::class => array('all' => true),
-    Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle::class => array('all' => true),
-
-    //====================================================================//
-    // Paddock Other Extensions Bundle
-    BadPixxel\Paddock\System\Php\PaddockPhpBundle::class => array('all' => true),
-    BadPixxel\Paddock\System\Shell\PaddockShellBundle::class => array('all' => true),
-    BadPixxel\Paddock\Apps\Nrpe\PaddockNrpeBundle::class => array('all' => true),
-    BadPixxel\Paddock\Apps\Sentry\PaddockSentryBundle::class => array('all' => true),
-    BadPixxel\Paddock\Backup\BackupBundle::class => array('all' => true),
+//====================================================================//
+// CORE BUNDLES
+//====================================================================//
+$bundles = array(
+    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
+    Knp\Bundle\GaufretteBundle\KnpGaufretteBundle::class => ['all' => true],
+    BadPixxel\Paddock\Core\PaddockCoreBundle::class => ['all' => true],
+    BadPixxel\Paddock\PaddockProjectBundle::class => ['all' => true],
+    BadPixxel\Paddock\Backup\BackupBundle::class => ['all' => true],
 );
+
+//====================================================================//
+// MYSQL BUNDLES
+//====================================================================//
+
+if (extension_loaded("pdo_mysql")) {
+    $bundles = array_merge($bundles, array(
+        Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
+        BadPixxel\Paddock\System\MySql\PaddockMySqlBundle::class => ['all' => true],
+    ));
+}
+
+//====================================================================//
+// MONGODB BUNDLES
+//====================================================================//
+
+if (extension_loaded("mongodb")) {
+    $bundles = array_merge($bundles, array(
+        Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle::class => ['all' => true],
+        BadPixxel\Paddock\System\MongoDb\PaddockMongoDbBundle::class => ['all' => true],
+    ));
+}
+
+//====================================================================//
+// SYSTEM BUNDLES
+//====================================================================//
+
+$bundles = array_merge($bundles, array(
+    BadPixxel\Paddock\Apps\Nrpe\PaddockNrpeBundle::class => ['all' => true],
+    BadPixxel\Paddock\Apps\Sentry\PaddockSentryBundle::class => ['all' => true],
+));
+
+//====================================================================//
+// APPS BUNDLES
+//====================================================================//
+
+$bundles = array_merge($bundles, array(
+    BadPixxel\Paddock\System\Php\PaddockPhpBundle::class => ['all' => true],
+    BadPixxel\Paddock\System\Shell\PaddockShellBundle::class => ['all' => true],
+));
+
+return $bundles;

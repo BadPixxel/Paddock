@@ -7,34 +7,20 @@
     "prefer-stable": true,
     "require": {
         "php":                                      "^7.4|^8.0",
-        "ext-ctype":                                "*",
-        "ext-iconv":                                "*",
-        "ext-json":                                 "*",
         "ext-zip":                                  "*",
-        "ext-curl":                                 "*",
-
-        "composer/package-versions-deprecated":     "~1.11",
-
-        "doctrine/mongodb-odm-bundle":              "^4.0",
-
-        "symfony/console":                          "~4.4",
-        "symfony/dotenv":                           "~4.4",
-        "symfony/flex":                             "^1.3.1",
-        "symfony/framework-bundle":                 "~4.4",
-        "symfony/monolog-bridge":                   "~4.4",
-        "symfony/proxy-manager-bridge":             "~4.4",
-        "symfony/yaml":                             "~4.4",
-        "symfony/process":                          "~4.4",
 
         "badpixxel/paddock-core":                   "dev-main",
+        "badpixxel/paddock-system":                 "dev-main",
         "badpixxel/paddock-mysql":                  "dev-main",
-
-        "gaufrette/phpseclib-sftp-adapter":         "^0.4.0"
+        "badpixxel/paddock-mongodb":                "dev-main",
+        "badpixxel/paddock-nrpe":                   "dev-main",
+        "badpixxel/paddock-sentry":                 "dev-main"
     },
     "require-dev": {
         "badpixxel/php-sdk":                        "dev-main"
     },
     "config": {
+        "bin-dir":                                  "bin",
         "optimize-autoloader":                      true,
         "preferred-install": {
             "*": "dist"
@@ -57,11 +43,11 @@
         }
     },
     "scripts": {
-        "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "rm -Rf /tmp/symfony-cache": "script"
-        },
+        "auto-scripts": [
+            "php bin/console cache:clear",
+            "php bin/console assets:install web",
+            "rm -Rf /tmp/symfony-cache"
+        ],
         "post-install-cmd": [
             "@auto-scripts"
         ],
