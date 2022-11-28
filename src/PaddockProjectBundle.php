@@ -11,13 +11,13 @@
  *  file that was distributed with this source code.
  */
 
-namespace BadPixxel\Paddock\Apps\Nrpe;
+namespace BadPixxel\Paddock;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Paddock Bundle for Nrpe.
+ * Paddock Project Bundle.
  */
-class PaddockNrpeBundle extends Bundle
+class PaddockProjectBundle extends Bundle
 {
 }

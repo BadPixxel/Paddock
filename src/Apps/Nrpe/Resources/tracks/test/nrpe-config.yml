@@ -1,9 +1,0 @@
-
-tracks:
-
-    test-nrpe-config:
-        collector:      "nrpe-status"
-        description:    "TEST - Nrpe Server Config"
-        rules:
-            # Nrpe Server Config
-            'config':                           { eq: "ok" }

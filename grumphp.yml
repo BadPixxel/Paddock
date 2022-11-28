@@ -26,7 +26,7 @@ parameters:
     exclude:            ['vendor', 'var', 'doc', "tests/Fixtures"]
 
     # For Building Splash Documentation
-    doc-src:            '/src/Docs'
+    doc-src:            '/src/resources/docs'
     doc-target:         '/public'
     doc-contents:       [ 'badpixxel-theme', 'php-composer', 'php-docker' ]
 
