@@ -34,4 +34,4 @@ echo " => Paddock: Config files must be relative to: ${PADDOCK_DIR}";
 
 ################################################################
 # Build Config File from Console
-php bin/console paddock:export build/paddock.yml ${PADDOCK_CONFIG}
+php bin/paddock paddock:export build/paddock.yml ${PADDOCK_CONFIG}

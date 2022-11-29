@@ -55,18 +55,18 @@ composer update --no-dev
 # Setup Paddock
 ################################################################
 echo "\033[32m NRPE Setup                         \033[0m";
-php bin/console paddock:nrpe:deploy
+php bin/paddock paddock:nrpe:deploy
 /etc/init.d/nagios-nrpe-server restart
 
 ################################################################
 # Show Paddock Help
 ################################################################
 echo "\033[32m Paddock Available Commands            \033[0m";
-php bin/console | grep paddock
+php bin/paddock | grep paddock
 echo "\033[32m Paddock Available Tracks              \033[0m";
-php bin/console paddock:tracks
+php bin/paddock paddock:tracks
 echo "\033[32m Paddock Available Backups             \033[0m";
-php bin/console paddock:backup:status
+php bin/paddock paddock:backup:status
 
 echo "\033[32m Paddock Status             \033[0m";
-php bin/console paddock:run -n --no-debug
+php bin/paddock paddock:run -n --no-debug
