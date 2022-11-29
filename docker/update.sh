@@ -13,5 +13,5 @@
 ################################################################################
 
 echo "[PADDOCK PHP] Build & Upload Docker Image"
-docker build -t registry.gitlab.com/badpixxel-projects/paddock:latest docker/paddock
-docker push registry.gitlab.com/badpixxel-projects/paddock:latest
+docker build -t registry.gitlab.com/paddock-project/paddock:latest docker/paddock
+docker push registry.gitlab.com/paddock-project/paddock:latest

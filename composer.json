@@ -43,7 +43,7 @@
     },
     "scripts": {
         "auto-scripts": [
-            "php vendor/bin/paddock cache:clear",
+            "php bin/paddock cache:clear",
             "php bin/paddock assets:install web",
             "rm -Rf /tmp/symfony-cache"
         ],
