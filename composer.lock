@@ -4,8 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c676fbca39479c1be08dac58607d1700",
+    "content-hash": "bf7d3615840374c633dac1af778dbc56",
     "packages": [
+        {
+            "name": "badpixxel/paddock-backups",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "git@gitlab.com:paddock-project/paddock-backups.git",
+                "reference": "7772705024597a20da5ac756bb151aaff2f3d657"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/paddock-project%2Fpaddock-backups/repository/archive.zip?sha=7772705024597a20da5ac756bb151aaff2f3d657",
+                "reference": "7772705024597a20da5ac756bb151aaff2f3d657",
+                "shasum": ""
+            },
+            "require": {
+                "badpixxel/paddock-core": "dev-main",
+                "badpixxel/paddock-system": "dev-main",
+                "ext-zip": "*",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "badpixxel/php-sdk": "dev-main"
+            },
+            "default-branch": true,
+            "type": "bundle",
+            "autoload": {
+                "psr-4": {
+                    "BadPixxel\\Paddock\\Backup\\": "src/"
+                },
+                "exclude-from-classmap": [
+                    "tests/source"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Paddock - Backups Extension",
+            "time": "2022-11-29T09:29:34+00:00"
+        },
         {
             "name": "badpixxel/paddock-core",
             "version": "dev-main",
@@ -9700,6 +9740,7 @@
     "stability-flags": {
         "badpixxel/paddock-core": 20,
         "badpixxel/paddock-system": 20,
+        "badpixxel/paddock-backups": 20,
         "badpixxel/paddock-mysql": 20,
         "badpixxel/paddock-mongodb": 20,
         "badpixxel/paddock-nrpe": 20,
@@ -9709,8 +9750,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.4|^8.0",
-        "ext-zip": "*"
+        "php": "^7.4|^8.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"
