@@ -18,7 +18,7 @@ $bundles = array(
     Knp\Bundle\GaufretteBundle\KnpGaufretteBundle::class => array('all' => true),
     BadPixxel\Paddock\Core\PaddockCoreBundle::class => array('all' => true),
     BadPixxel\Paddock\PaddockProjectBundle::class => array('all' => true),
-    BadPixxel\Paddock\Backup\BackupBundle::class => array('all' => true),
+    BadPixxel\Paddock\Backup\PaddockBackupBundle::class => array('all' => true),
 );
 
 //====================================================================//

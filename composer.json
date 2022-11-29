@@ -7,10 +7,9 @@
     "prefer-stable": true,
     "require": {
         "php":                                      "^7.4|^8.0",
-        "ext-zip":                                  "*",
-
         "badpixxel/paddock-core":                   "dev-main",
         "badpixxel/paddock-system":                 "dev-main",
+        "badpixxel/paddock-backups":                "dev-main",
         "badpixxel/paddock-mysql":                  "dev-main",
         "badpixxel/paddock-mongodb":                "dev-main",
         "badpixxel/paddock-nrpe":                   "dev-main",
@@ -44,7 +43,7 @@
     },
     "scripts": {
         "auto-scripts": [
-            "php bin/paddock cache:clear",
+            "php vendor/bin/paddock cache:clear",
             "php bin/paddock assets:install web",
             "rm -Rf /tmp/symfony-cache"
         ],
@@ -57,6 +56,9 @@
     },
     "conflict": {
         "symfony/symfony": "*"
+    },
+    "provide": {
+        "ext-zip": "*"
     },
     "extra": {
         "symfony": {

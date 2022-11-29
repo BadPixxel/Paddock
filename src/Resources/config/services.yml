@@ -1,0 +1,22 @@
+services:
+
+    # default configuration for services in *this* file
+    _defaults:
+        autowire:       true
+        autoconfigure:  true
+
+    ########################################################################
+    #   PADDOCK PROJECT DATA COLLECTORS
+    ########################################################################
+
+    BadPixxel\Paddock\Collector\:
+        resource: '../../Collector/'
+        tags:    [ 'paddock.collector' ]
+
+    ########################################################################
+    #   PADDOCK PROJECT EVENTS SUBSCRIBER
+    ########################################################################
+
+    BadPixxel\Paddock\EventSubscriber\:
+        resource: '../../EventSubscriber/'
+        tags:    [ kernel.event_subscriber ]
