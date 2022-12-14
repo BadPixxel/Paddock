@@ -13,7 +13,8 @@
         "badpixxel/paddock-mysql":                  "dev-main",
         "badpixxel/paddock-mongodb":                "dev-main",
         "badpixxel/paddock-nrpe":                   "dev-main",
-        "badpixxel/paddock-sentry":                 "dev-main"
+        "badpixxel/paddock-sentry":                 "dev-main",
+        "badpixxel/paddock-seo":                    "dev-main"
     },
     "require-dev": {
         "badpixxel/php-sdk":                        "dev-main"
